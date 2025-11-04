@@ -1,44 +1,85 @@
-
 import React from 'react';
-import { LogoIcon } from './Icons';
+import { LogoIcon, InstagramIcon, TikTokIcon, YouTubeIcon } from './Icons';
+import { Filters } from '../data/products';
 
-const Footer: React.FC = () => {
-  const footerLinks = {
-    Featured: ['Air Force 1', 'Jordan 1', 'Air Max Dn', 'Vomero'],
-    Shoes: ['All Shoes', 'Jordan Shoes', 'Running Shoes', 'Basketball Shoes'],
-    Clothing: ['All Clothing', 'Tops & T-Shirts', 'Shorts', 'Hoodies & Pullovers'],
-    Kids: ['Infant & Toddler Shoes', 'Kids\' Shoes', 'Kids\' Clothing', 'Kids\' Accessories'],
-  };
+interface FooterProps {
+  onNavigate: (page: string, product?: any, filters?: Partial<Filters>) => void;
+}
 
+const footerLinks = {
+  'Destaques': [
+    { name: 'Tênis', filter: { category: 'Tênis' } },
+    { name: 'Roupas', filter: { category: 'Roupas' } },
+    { name: 'Basquete', filter: { style: ['Basquete'] } },
+    { name: 'Corrida', filter: { style: ['Corrida'] } },
+  ],
+  'Saúde': [
+    { name: 'Suplementos', filter: { category: 'Suplementos' } },
+    { name: 'Fisio e Ortopédico', filter: { category: 'Fisio e Ortopédico' } },
+  ],
+  'Suporte': [
+    { name: 'Ajuda', page: 'help' },
+    { name: 'Status do Pedido', disabled: true },
+    { name: 'Entregas', disabled: true },
+    { name: 'Devoluções', disabled: true },
+  ],
+};
+
+const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
   return (
-    <footer className="bg-black text-gray-300 pt-16 pb-8">
+    <footer className="bg-gray-100 dark:bg-black text-gray-600 dark:text-gray-300 pt-16 pb-8">
       <div className="container mx-auto px-4">
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-8">
-          <div className="col-span-2 md:col-span-1 mb-8 md:mb-0">
-             <a href="#" className="flex-shrink-0">
-               <LogoIcon className="h-12 w-auto text-white" />
-            </a>
-          </div>
-          {Object.entries(footerLinks).map(([title, links]) => (
-            <div key={title}>
-              <h4 className="font-bold text-white uppercase text-sm tracking-wider">{title}</h4>
-              <ul className="mt-4 space-y-3">
-                {links.map((link) => (
-                  <li key={link}>
-                    <a href="#" className="text-sm text-gray-400 hover:text-white">{link}</a>
-                  </li>
-                ))}
-              </ul>
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-12 gap-8">
+          
+          <div className="col-span-2 md:col-span-4 lg:col-span-3 mb-8 md:mb-0">
+             <button onClick={() => onNavigate('home')} className="flex-shrink-0">
+               <LogoIcon className="h-12 w-auto text-black dark:text-white" />
+            </button>
+            <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">A melhor seleção de artigos esportivos e lifestyle.</p>
+            <div className="flex space-x-4 mt-4">
+                <a href="#" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-black dark:hover:text-white transition-colors">
+                    <InstagramIcon className="w-6 h-6" />
+                </a>
+                <a href="#" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-black dark:hover:text-white transition-colors">
+                    <TikTokIcon className="w-6 h-6" />
+                </a>
+                <a href="#" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-black dark:hover:text-white transition-colors">
+                    <YouTubeIcon className="w-6 h-6" />
+                </a>
             </div>
-          ))}
+          </div>
+          
+          <div className="col-span-2 md:col-span-4 lg:col-span-6 grid grid-cols-2 md:grid-cols-3 gap-8">
+            {Object.entries(footerLinks).map(([title, links]) => (
+              <div key={title}>
+                <h4 className="font-bold text-black dark:text-white uppercase text-sm tracking-wider">{title}</h4>
+                <ul className="mt-4 space-y-3">
+                  {links.map((link) => (
+                    <li key={link.name}>
+                      <button 
+                        onClick={() => {
+                          if (link.page) onNavigate(link.page);
+                          else if (link.filter) onNavigate('shop', undefined, link.filter);
+                        }} 
+                        disabled={link.disabled}
+                        className="text-left text-sm text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
+                      >
+                        {link.name}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
         </div>
-        <div className="mt-12 pt-8 border-t border-gray-800 flex flex-col md:flex-row justify-between items-center text-sm">
-          <p className="text-gray-500 order-2 md:order-1 mt-4 md:mt-0">&copy; {new Date().getFullYear()} Recreio Imports. All rights reserved.</p>
+
+        <div className="mt-12 pt-8 border-t border-gray-200 dark:border-gray-800 flex flex-col md:flex-row justify-between items-center text-sm">
+          <p className="text-gray-400 dark:text-gray-500 order-2 md:order-1 mt-4 md:mt-0">&copy; {new Date().getFullYear()} Recreio Imports. Todos os direitos reservados.</p>
            <div className="flex space-x-6 order-1 md:order-2">
-            <a href="#" className="hover:text-white">Find a Store</a>
-            <a href="#" className="hover:text-white">Help</a>
-            <a href="#" className="hover:text-white">Join Us</a>
-            <a href="#" className="hover:text-white">Sign In</a>
+            <button onClick={() => onNavigate('leadCapture')} className="hover:text-black dark:hover:text-white">Receba Ofertas</button>
+            <button onClick={() => onNavigate('help')} className="hover:text-black dark:hover:text-white">Ajuda</button>
+            <button onClick={() => onNavigate('login')} className="hover:text-black dark:hover:text-white">Entrar</button>
            </div>
         </div>
       </div>
