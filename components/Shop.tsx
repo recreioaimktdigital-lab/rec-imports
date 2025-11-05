@@ -214,14 +214,20 @@ const Shop: React.FC<ShopProps> = ({ products, onNavigate, wishlistItems, onTogg
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
               {sortedAndFilteredProducts.map((product) => {
                  const isWishlisted = wishlistItems.some(item => item.id === product.id);
+                 const isOutOfStock = product.stock === 0;
                  return (
-                  <div key={product.id} className="group overflow-hidden rounded-lg cursor-pointer bg-gray-100 dark:bg-[#181818] flex flex-col relative" onClick={() => onNavigate('productDetail', product)}>
-                     <button onClick={(e) => handleWishlistClick(e, product)} className="absolute top-3 right-3 z-10 p-2 bg-white/50 dark:bg-black/50 rounded-full backdrop-blur-sm hover:scale-110 transition-transform" aria-label="Adicionar aos Favoritos">
-                        {isWishlisted ? <HeartIconSolid className="w-5 h-5 text-red-500"/> : <HeartIcon className="w-5 h-5"/>}
-                    </button>
-                    <div className="overflow-hidden">
-                      <img src={product.image} alt={product.name} className="w-full h-80 object-cover transition-transform duration-500 group-hover:scale-105" />
-                    </div>
+                  <div key={product.id} className="group rounded-lg bg-gray-100 dark:bg-[#181818] flex flex-col cursor-pointer" onClick={() => onNavigate('productDetail', product)}>
+                     <div className="relative overflow-hidden">
+                        {isOutOfStock && (
+                            <div className="absolute top-3 left-3 bg-red-500 text-white text-xs font-bold uppercase px-2 py-1 rounded-full z-10">
+                                Esgotado
+                            </div>
+                        )}
+                        <button onClick={(e) => handleWishlistClick(e, product)} className="absolute top-3 right-3 z-20 p-2 bg-white/50 dark:bg-black/50 rounded-full backdrop-blur-sm hover:scale-110 transition-transform" aria-label="Adicionar aos Favoritos">
+                            {isWishlisted ? <HeartIconSolid className="w-5 h-5 text-red-500"/> : <HeartIcon className="w-5 h-5"/>}
+                        </button>
+                        <img src={product.image} alt={product.name} className={`w-full h-80 object-cover transition-transform duration-500 group-hover:scale-105 ${isOutOfStock ? 'grayscale' : ''}`} onContextMenu={(e) => e.preventDefault()} />
+                     </div>
                     <div className="p-4 flex flex-col flex-grow">
                        <h3 className="font-bold text-lg truncate">{product.name}</h3>
                        <p className="text-sm text-gray-500 dark:text-gray-400">{product.brand} / {product.category}</p>

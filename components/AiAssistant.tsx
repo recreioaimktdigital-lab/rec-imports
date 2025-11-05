@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { GoogleGenAI, Chat, FunctionDeclaration, Type } from "@google/genai";
 import { AiAssistantIcon, CloseIcon } from './Icons';
@@ -152,7 +151,7 @@ const AiAssistant: React.FC<AiAssistantProps> = ({ products, onNavigate }) => {
                     <div className="mt-3 grid grid-cols-1 gap-2 border-t border-gray-400/50 pt-2">
                         {msg.products.map(product => (
                             <div key={product.id} className="flex items-center gap-3 p-2 rounded-lg bg-white/50 dark:bg-gray-800/50">
-                                <img src={product.image} alt={product.name} className="w-14 h-14 object-cover rounded-md" />
+                                <img src={product.image} alt={product.name} className="w-14 h-14 object-cover rounded-md" onContextMenu={(e) => e.preventDefault()} />
                                 <div className="flex-1">
                                     <p className="font-bold text-sm text-black dark:text-white">{product.name}</p>
                                     <p className="text-xs text-gray-600 dark:text-gray-300">R$ {product.price.toFixed(2)}</p>

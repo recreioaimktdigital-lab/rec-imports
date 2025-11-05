@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 // FIX: Corrected import path for CartItem type.
 import { CartItem } from '../data/products';
@@ -89,7 +88,7 @@ const Checkout: React.FC<CheckoutProps> = ({ cartItems, onPlaceOrder }) => {
                             {cartItems.map(item => (
                                 <div key={item.cartItemId} className="flex items-center gap-4">
                                     <div className="relative">
-                                        <img src={item.image} alt={item.name} className="w-16 h-16 object-cover rounded-md" />
+                                        <img src={item.image} alt={item.name} className="w-16 h-16 object-cover rounded-md" onContextMenu={(e) => e.preventDefault()} />
                                         <span className="absolute -top-2 -right-2 flex h-6 w-6 items-center justify-center rounded-full bg-brand-yellow text-xs font-bold text-black">{item.quantity}</span>
                                     </div>
                                     <div className="flex-1">

@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { TrashIcon, PlusIcon, MinusIcon } from './Icons';
 // FIX: Corrected import path for CartItem type.
@@ -40,7 +39,7 @@ const Cart: React.FC<CartProps> = ({ cartItems, onContinueShopping, onQuantityCh
         <div className="lg:col-span-2 space-y-4">
           {cartItems.map(item => (
             <div key={item.cartItemId} className="flex items-start bg-gray-100 dark:bg-[#181818] p-4 rounded-lg gap-4">
-              <img src={item.image} alt={item.name} className="w-24 h-24 md:w-32 md:h-32 object-cover rounded-md" />
+              <img src={item.image} alt={item.name} className="w-24 h-24 md:w-32 md:h-32 object-cover rounded-md" onContextMenu={(e) => e.preventDefault()} />
               <div className="flex-1">
                 <div className="flex justify-between items-start">
                   <div>

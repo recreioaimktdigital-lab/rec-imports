@@ -127,7 +127,7 @@ const Header: React.FC<HeaderProps> = ({ products, currentPage, onNavigate, them
                     {searchResults.map(product => (
                       <li key={product.id}>
                         <button onClick={() => handleResultClick(product)} className="w-full flex items-center gap-4 p-3 text-left hover:bg-gray-100 dark:hover:bg-gray-700">
-                          <img src={product.image} alt={product.name} className="w-12 h-12 object-cover rounded-md" />
+                          <img src={product.image} alt={product.name} className="w-12 h-12 object-cover rounded-md" onContextMenu={(e) => e.preventDefault()} />
                           <div className="flex-1">
                             <p className="font-semibold text-sm text-black dark:text-white">{product.name}</p>
                             <p className="text-sm text-gray-500 dark:text-gray-400">R$ {product.price.toFixed(2)}</p>

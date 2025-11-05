@@ -1,4 +1,3 @@
-
 import React from 'react';
 // FIX: Corrected import path for Product type.
 import { Product } from '../data/products';
@@ -22,7 +21,7 @@ const ProductShowcase: React.FC<ProductShowcaseProps> = ({ products, onNavigate 
     <section className="py-12 md:py-20 bg-gray-100 dark:bg-[#181818]">
       <div className="container mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
         <div className="relative group overflow-hidden rounded-lg">
-          <img src="https://picsum.photos/800/800?random=2" alt="Lime green running shoe" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+          <img src="https://picsum.photos/800/800?random=2" alt="Lime green running shoe" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" onContextMenu={(e) => e.preventDefault()} />
           <div className="absolute bottom-8 left-8 text-white">
             <h3 className="text-3xl font-bold uppercase">Kit Max Volt-Ex</h3>
             <p>Entre no jogo.</p>
@@ -34,7 +33,7 @@ const ProductShowcase: React.FC<ProductShowcaseProps> = ({ products, onNavigate 
           </div>
         </div>
         <div className="relative group overflow-hidden rounded-lg">
-          <img src="https://picsum.photos/800/800?random=3" alt="Basketball players in action" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+          <img src="https://picsum.photos/800/800?random=3" alt="Basketball players in action" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" onContextMenu={(e) => e.preventDefault()} />
           <div className="absolute bottom-8 left-8 text-white">
             <h3 className="text-3xl font-bold uppercase">Estilos para a Quadra</h3>
             <p>Presentes para Feras do Basquete</p>

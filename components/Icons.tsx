@@ -96,12 +96,6 @@ export const MinusIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
   </svg>
 );
 
-export const AiAssistantIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
-  <svg {...props} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-    <path d="M14.25 6.08333L13.5 4.5L12.75 6.08333L11.25 6.75L12.75 7.41667L13.5 9L14.25 7.41667L15.75 6.75M5.25 21.75L6.75 17.25L2.25 15.75L6.75 14.25L5.25 9.75L9.75 11.25L11.25 6.75L12.75 11.25L17.25 9.75L15.75 14.25L20.25 15.75L15.75 17.25L17.25 21.75L12.75 20.25L11.25 24.75" />
-  </svg>
-);
-
 export const CloseIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
     <svg {...props} fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -111,6 +105,12 @@ export const CloseIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
 export const CheckCircleIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
     <svg {...props} fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+    </svg>
+);
+
+export const ExclamationCircleIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
+    <svg {...props} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
     </svg>
 );
 
@@ -147,5 +147,13 @@ export const YouTubeIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
 export const MenuIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
     <svg {...props} fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+    </svg>
+);
+
+// FIX: Added missing AiAssistantIcon
+export const AiAssistantIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
+    <svg {...props} fill="currentColor" viewBox="0 0 24 24">
+        <path fillRule="evenodd" d="M9 4.5a.75.75 0 01.75.75v3.546l.065-.052a3.375 3.375 0 014.34 4.34l-.052.065h3.546a.75.75 0 010 1.5H14.25l.052.065a3.375 3.375 0 01-4.34 4.34l-.065.052v3.546a.75.75 0 01-1.5 0V18.75l-.065.052a3.375 3.375 0 01-4.34-4.34l.052-.065H4.5a.75.75 0 010-1.5h3.546l-.052-.065a3.375 3.375 0 014.34-4.34l.065-.052V5.25A.75.75 0 019 4.5zM12 10.5a1.5 1.5 0 100 3 1.5 1.5 0 000-3z" clipRule="evenodd" />
+        <path d="M15.75 2.25a.75.75 0 01.75.75v.518l.38.19a2.25 2.25 0 012.122 2.122l.19.38v.518a.75.75 0 01-1.5 0v-.518l-.38-.19a.75.75 0 00-.707-.707l-.19-.38h-.518a.75.75 0 01-.75-.75zM4.5 15.75a.75.75 0 01.75.75v.518l.38.19a2.25 2.25 0 012.122 2.122l.19.38v.518a.75.75 0 01-1.5 0v-.518l-.38-.19a.75.75 0 00-.707-.707l-.19-.38h-.518a.75.75 0 01-.75-.75z" />
     </svg>
 );

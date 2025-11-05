@@ -1,4 +1,3 @@
-
 import React from 'react';
 // FIX: Corrected import path for Product and Filters types.
 import { Product, Filters } from '../data/products';
@@ -30,7 +29,7 @@ const FeaturedCategories: React.FC<FeaturedCategoriesProps> = ({ onNavigate }) =
       <div className="container mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8">
         {categories.map((category) => (
           <div key={category.name} className="relative group overflow-hidden rounded-lg">
-            <img src={category.image} alt={category.name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+            <img src={category.image} alt={category.name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" onContextMenu={(e) => e.preventDefault()} />
             <div className="absolute inset-0 bg-black bg-opacity-20 flex items-end p-8">
               <button 
                 onClick={() => handleShopCategory(category.name)}

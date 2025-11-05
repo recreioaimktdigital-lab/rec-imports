@@ -1,4 +1,3 @@
-
 import React, { useRef } from 'react';
 import { ArrowLeftIcon, ArrowRightIcon } from './Icons';
 // FIX: Corrected import path for Product and Filters types.
@@ -56,7 +55,7 @@ const Spotlight: React.FC<SpotlightProps> = ({ onNavigate }) => {
                 className="flex-shrink-0 w-60 md:w-80 text-center group"
               >
                 <div className="relative overflow-hidden rounded-lg w-full h-60 md:h-80 bg-gray-100 dark:bg-gray-800">
-                  <img src={item.image} alt={item.name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                  <img src={item.image} alt={item.name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" onContextMenu={(e) => e.preventDefault()} />
                 </div>
                 <span className="mt-4 block text-lg font-bold text-black dark:text-white uppercase tracking-wide group-hover:text-brand-yellow transition-colors">{item.name}</span>
               </button>

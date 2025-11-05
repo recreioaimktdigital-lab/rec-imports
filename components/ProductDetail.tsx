@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 // FIX: Corrected import path for Product type.
 import { Product } from '../data/products';
 import { PlusIcon, MinusIcon, HeartIcon, HeartIconSolid, StarIcon, StarIconOutline } from './Icons';
@@ -83,6 +83,21 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ product, onAddToCart, wis
   const [selectedColor, setSelectedColor] = useState(product.colors[0]);
   const [quantity, setQuantity] = useState(1);
   const [allReviews, setAllReviews] = useState(product.reviews);
+  const [isZooming, setIsZooming] = useState(false);
+  const [bgPosition, setBgPosition] = useState('center');
+  const imageContainerRef = useRef<HTMLDivElement>(null);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!imageContainerRef.current) return;
+    const { left, top, width, height } = imageContainerRef.current.getBoundingClientRect();
+    const x = e.clientX - left;
+    const y = e.clientY - top;
+    
+    const bgX = (x / width) * 100;
+    const bgY = (y / height) * 100;
+    
+    setBgPosition(`${bgX}% ${bgY}%`);
+  };
 
   const handleAddToCartClick = () => {
     onAddToCart(product, quantity, selectedSize, selectedColor);
@@ -94,6 +109,7 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ product, onAddToCart, wis
   };
 
   const isWishlisted = wishlistItems.some(item => item.id === product.id);
+  const isOutOfStock = product.stock === 0;
 
   const relatedProducts = allProducts
     .filter(p => p.category === product.category && p.id !== product.id)
@@ -102,22 +118,39 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ product, onAddToCart, wis
   return (
     <div className="container mx-auto px-4 py-12 md:py-20">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12">
-        {/* Image Gallery */}
-        <div className="flex flex-col-reverse md:flex-row gap-4">
-          <div className="flex md:flex-col gap-2 overflow-x-auto md:overflow-x-visible pb-2 md:pb-0">
-            {product.gallery.map((img, index) => (
-              <button 
-                key={index} 
-                onClick={() => setSelectedImage(img)}
-                className={`flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-colors ${selectedImage === img ? 'border-brand-yellow' : 'border-transparent'}`}
-              >
-                <img src={img} alt={`${product.name} view ${index + 1}`} className="w-full h-full object-cover" />
-              </button>
-            ))}
-          </div>
-          <div className="flex-1">
-            <img src={selectedImage} alt={product.name} className="w-full h-auto object-cover rounded-lg shadow-lg" />
-          </div>
+        {/* Image Gallery Column */}
+        <div className="relative">
+            <div 
+              ref={imageContainerRef}
+              className="relative overflow-hidden rounded-lg shadow-lg cursor-zoom-in mb-4"
+              onMouseEnter={() => setIsZooming(true)}
+              onMouseLeave={() => setIsZooming(false)}
+              onMouseMove={handleMouseMove}
+            >
+              <img src={selectedImage} alt={product.name} className="w-full h-auto object-cover aspect-square" onContextMenu={(e) => e.preventDefault()} />
+            </div>
+            
+            <div className="flex gap-2 overflow-x-auto pb-2 -mx-4 px-4 scrollbar-hide">
+              {product.gallery.map((img, index) => (
+                <button 
+                  key={index} 
+                  onClick={() => setSelectedImage(img)}
+                  className={`flex-shrink-0 w-20 h-20 md:w-24 md:h-24 rounded-lg overflow-hidden border-2 transition-colors ${selectedImage === img ? 'border-brand-yellow' : 'border-transparent'}`}
+                >
+                  <img src={img} alt={`${product.name} view ${index + 1}`} className="w-full h-full object-cover" onContextMenu={(e) => e.preventDefault()} />
+                </button>
+              ))}
+            </div>
+
+          {/* Zoomed View (Desktop only) */}
+          <div 
+            className={`hidden lg:block absolute left-full ml-8 top-0 w-full h-full bg-no-repeat border-2 border-gray-200 dark:border-gray-700 rounded-lg shadow-2xl pointer-events-none transition-opacity duration-300 z-10 ${isZooming ? 'opacity-100' : 'opacity-0'}`}
+            style={{
+                backgroundImage: `url(${selectedImage})`,
+                backgroundPosition: bgPosition,
+                backgroundSize: '200%',
+            }}
+          />
         </div>
 
         {/* Product Info */}
@@ -160,16 +193,19 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ product, onAddToCart, wis
           </div>
 
           <div className="mt-8 flex items-center gap-4">
-            <div className="flex items-center gap-2 bg-gray-100 dark:bg-gray-800 rounded-full p-1">
-              <button onClick={() => setQuantity(q => Math.max(1, q - 1))} className="p-2.5 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700"><MinusIcon className="w-5 h-5" /></button>
-              <span className="px-4 font-semibold text-lg">{quantity}</span>
-              <button onClick={() => setQuantity(q => q + 1)} className="p-2.5 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700"><PlusIcon className="w-5 h-5" /></button>
-            </div>
+             {!isOutOfStock && (
+                <div className="flex items-center gap-2 bg-gray-100 dark:bg-gray-800 rounded-full p-1">
+                <button onClick={() => setQuantity(q => Math.max(1, q - 1))} className="p-2.5 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700"><MinusIcon className="w-5 h-5" /></button>
+                <span className="px-4 font-semibold text-lg">{quantity}</span>
+                <button onClick={() => setQuantity(q => Math.min(product.stock, q + 1))} className="p-2.5 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700"><PlusIcon className="w-5 h-5" /></button>
+                </div>
+             )}
             <button 
               onClick={handleAddToCartClick}
-              className="flex-1 bg-brand-yellow text-black font-semibold py-4 rounded-full hover:bg-yellow-300 transition-colors duration-300"
+              disabled={isOutOfStock}
+              className="flex-1 bg-brand-yellow text-black font-semibold py-4 rounded-full hover:bg-yellow-300 transition-colors duration-300 disabled:bg-gray-400 disabled:cursor-not-allowed"
             >
-              Adicionar ao Carrinho
+              {isOutOfStock ? 'Esgotado' : 'Adicionar ao Carrinho'}
             </button>
             <button 
                 onClick={() => onToggleWishlist(product)}
@@ -223,11 +259,16 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ product, onAddToCart, wis
                     {relatedProducts.map(relatedProduct => (
                         <div
                             key={relatedProduct.id}
-                            className="group overflow-hidden rounded-lg cursor-pointer bg-gray-100 dark:bg-[#181818] flex flex-col"
+                            className="group overflow-hidden rounded-lg cursor-pointer bg-gray-100 dark:bg-[#181818] flex flex-col relative"
                             onClick={() => onNavigate('productDetail', relatedProduct)}
                         >
+                            {relatedProduct.stock === 0 && (
+                                <div className="absolute top-3 left-3 bg-red-500 text-white text-xs font-bold uppercase px-2 py-1 rounded-full z-10">
+                                    Esgotado
+                                </div>
+                            )}
                             <div className="overflow-hidden">
-                                <img src={relatedProduct.image} alt={relatedProduct.name} className="w-full h-80 object-cover transition-transform duration-500 group-hover:scale-105" />
+                                <img src={relatedProduct.image} alt={relatedProduct.name} className="w-full h-80 object-cover transition-transform duration-500 group-hover:scale-105" onContextMenu={(e) => e.preventDefault()} />
                             </div>
                             <div className="p-4 flex flex-col flex-grow">
                                 <h3 className="font-bold text-lg truncate">{relatedProduct.name}</h3>

@@ -1,4 +1,3 @@
-
 import React from 'react';
 // FIX: Corrected import path for Product and CartItem types.
 import { Product, CartItem } from '../data/products';
@@ -28,7 +27,6 @@ const Wishlist: React.FC<WishlistProps> = ({ wishlistItems, onNavigate, onToggle
     const defaultSize = product.sizes[0];
     const defaultColor = product.colors[0];
     onAddToCart(product, 1, defaultSize, defaultColor);
-    // Maybe show a toast notification here in a real app
     onToggleWishlist(product); // Remove from wishlist after adding to cart
   };
 
@@ -55,42 +53,50 @@ const Wishlist: React.FC<WishlistProps> = ({ wishlistItems, onNavigate, onToggle
         <p className="mt-2 text-lg text-gray-600 dark:text-gray-300">Seus produtos favoritos, todos em um só lugar.</p>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-8">
-        {wishlistItems.map((product) => (
-          <div
-            key={product.id}
-            className="group overflow-hidden rounded-lg cursor-pointer bg-gray-100 dark:bg-[#181818] flex flex-col relative"
-            onClick={() => onNavigate('productDetail', product)}
-          >
-            <div className="absolute top-3 right-3 z-10 flex flex-col gap-2">
-                <button 
-                    onClick={(e) => { e.stopPropagation(); onToggleWishlist(product); }}
-                    className="p-2 bg-white/50 dark:bg-black/50 rounded-full backdrop-blur-sm hover:scale-110 transition-transform"
-                    aria-label="Remover dos Favoritos"
-                >
-                    <HeartIconSolid className="w-5 h-5 text-red-500"/>
-                </button>
-                <button 
-                    onClick={(e) => handleAddToCartClick(e, product)}
-                    className="p-2 bg-white/50 dark:bg-black/50 rounded-full backdrop-blur-sm hover:scale-110 transition-transform"
-                    aria-label="Adicionar ao Carrinho"
-                >
-                    <BagIcon className="w-5 h-5"/>
-                </button>
+        {wishlistItems.map((product) => {
+          const isOutOfStock = product.stock === 0;
+          return (
+            <div
+              key={product.id}
+              className="group overflow-hidden rounded-lg cursor-pointer bg-gray-100 dark:bg-[#181818] flex flex-col"
+              onClick={() => onNavigate('productDetail', product)}
+            >
+              <div className="relative overflow-hidden">
+                  {isOutOfStock && (
+                      <div className="absolute top-3 left-3 bg-red-500 text-white text-xs font-bold uppercase px-2 py-1 rounded-full z-10">
+                          Esgotado
+                      </div>
+                  )}
+                  <div className="absolute top-3 right-3 z-20 flex flex-col gap-2">
+                      <button 
+                          onClick={(e) => { e.stopPropagation(); onToggleWishlist(product); }}
+                          className="p-2 bg-white/50 dark:bg-black/50 rounded-full backdrop-blur-sm hover:scale-110 transition-transform"
+                          aria-label="Remover dos Favoritos"
+                      >
+                          <HeartIconSolid className="w-5 h-5 text-red-500"/>
+                      </button>
+                      <button 
+                          onClick={(e) => handleAddToCartClick(e, product)}
+                          disabled={isOutOfStock}
+                          className="p-2 bg-white/50 dark:bg-black/50 rounded-full backdrop-blur-sm hover:scale-110 transition-transform disabled:opacity-50 disabled:cursor-not-allowed"
+                          aria-label="Adicionar ao Carrinho"
+                      >
+                          <BagIcon className="w-5 h-5"/>
+                      </button>
+                  </div>
+                <img src={product.image} alt={product.name} className={`w-full h-80 object-cover transition-transform duration-500 group-hover:scale-105 ${isOutOfStock ? 'grayscale' : ''}`} onContextMenu={(e) => e.preventDefault()} />
+              </div>
+              <div className="p-4 flex flex-col flex-grow">
+                 <h3 className="font-bold text-lg truncate">{product.name}</h3>
+                 <p className="text-sm text-gray-500 dark:text-gray-400">{product.category}</p>
+                 <div className="mt-2">
+                   <StarRatingDisplay rating={product.rating} />
+                 </div>
+                 <p className="mt-2 font-semibold text-lg mt-auto">R$ {product.price.toFixed(2)}</p>
+              </div>
             </div>
-
-            <div className="overflow-hidden">
-              <img src={product.image} alt={product.name} className="w-full h-80 object-cover transition-transform duration-500 group-hover:scale-105" />
-            </div>
-            <div className="p-4 flex flex-col flex-grow">
-               <h3 className="font-bold text-lg truncate">{product.name}</h3>
-               <p className="text-sm text-gray-500 dark:text-gray-400">{product.category}</p>
-               <div className="mt-2">
-                 <StarRatingDisplay rating={product.rating} />
-               </div>
-               <p className="mt-2 font-semibold text-lg mt-auto">R$ {product.price.toFixed(2)}</p>
-            </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );

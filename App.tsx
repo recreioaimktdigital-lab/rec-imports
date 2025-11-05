@@ -10,20 +10,26 @@ import Footer from './components/Footer';
 import Cart from './components/Cart';
 import ProductDetail from './components/ProductDetail';
 import Shop from './components/Shop';
-import { WhatsAppIcon, CheckCircleIcon } from './components/Icons';
-import CtaSection from './components/CtaSection';
-import LeadCapture from './components/LeadCapture';
+import { WhatsAppIcon, CheckCircleIcon, HeartIconSolid, ExclamationCircleIcon } from './components/Icons';
 import Checkout from './components/Checkout';
 import OrderConfirmation from './components/OrderConfirmation';
 import Wishlist from './components/Wishlist';
 import Help from './components/Help';
 import Login from './components/Login';
-import AiAssistant from './components/AiAssistant';
+import VideoModal from './components/VideoModal';
 import { Product, CartItem, Order, Filters, products } from './data/products';
+import LeadCapture from './components/LeadCapture';
 
-const Toast: React.FC<{ message: string }> = ({ message }) => (
-  <div className="fixed bottom-24 md:bottom-10 left-1/2 -translate-x-1/2 z-[60] flex items-center gap-3 bg-black dark:bg-white text-white dark:text-black py-3 px-6 rounded-full shadow-lg">
-    <CheckCircleIcon className="w-6 h-6 text-green-500" />
+interface ToastProps {
+  message: string;
+  icon: 'success' | 'heart' | 'error';
+}
+
+const Toast: React.FC<ToastProps> = ({ message, icon }) => (
+  <div className="fixed bottom-24 md:bottom-10 left-1/2 -translate-x-1/2 z-[60] flex items-center gap-3 bg-black dark:bg-white text-white dark:text-black py-3 px-6 rounded-full shadow-lg animate-fade-in">
+    {icon === 'success' && <CheckCircleIcon className="w-6 h-6 text-green-500" />}
+    {icon === 'heart' && <HeartIconSolid className="w-6 h-6 text-red-500" />}
+    {icon === 'error' && <ExclamationCircleIcon className="w-6 h-6 text-red-500" />}
     <span className="font-semibold">{message}</span>
   </div>
 );
@@ -35,7 +41,9 @@ function App() {
   const [wishlistItems, setWishlistItems] = useState<Product[]>([]);
   const [theme, setTheme] = useState<'light' | 'dark'>('dark');
   const [completedOrder, setCompletedOrder] = useState<Order | null>(null);
-  const [toastMessage, setToastMessage] = useState('');
+  const [toast, setToast] = useState<{ message: string; icon: 'success' | 'heart' | 'error' } | null>(null);
+  const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
+  const [currentVideoUrl, setCurrentVideoUrl] = useState('');
   
   const initialFilters: Filters = {
     category: 'Todos',
@@ -55,13 +63,32 @@ function App() {
   }, [theme]);
 
   useEffect(() => {
-    if (toastMessage) {
+    if (toast) {
       const timer = setTimeout(() => {
-        setToastMessage('');
+        setToast(null);
       }, 3000);
       return () => clearTimeout(timer);
     }
-  }, [toastMessage]);
+  }, [toast]);
+
+  // Centralized scroll lock management
+  useEffect(() => {
+    if (isVideoModalOpen) {
+      document.body.classList.add('overflow-hidden');
+    } else {
+      document.body.classList.remove('overflow-hidden');
+    }
+  }, [isVideoModalOpen]);
+
+  const openVideoModal = (url: string) => {
+    setCurrentVideoUrl(url);
+    setIsVideoModalOpen(true);
+  };
+
+  const closeVideoModal = () => {
+    setIsVideoModalOpen(false);
+    setCurrentVideoUrl('');
+  };
 
   const toggleTheme = () => {
     setTheme(prevTheme => prevTheme === 'dark' ? 'light' : 'dark');
@@ -84,9 +111,21 @@ function App() {
   };
   
   const handleAddToCart = (product: Product, quantity: number, size: string, color: string) => {
+    if (product.stock < 1) {
+        setToast({ message: `${product.name} está esgotado!`, icon: 'error' });
+        return;
+    }
+
     const cartItemId = `${product.id}-${size}-${color}`;
+    const existingItem = cartItems.find(item => item.cartItemId === cartItemId);
+    const existingQuantity = existingItem ? existingItem.quantity : 0;
+
+    if (existingQuantity + quantity > product.stock) {
+        setToast({ message: `Estoque insuficiente para ${product.name}`, icon: 'error' });
+        return;
+    }
+
     setCartItems(prevItems => {
-      const existingItem = prevItems.find(item => item.cartItemId === cartItemId);
       if (existingItem) {
         return prevItems.map(item => 
           item.cartItemId === cartItemId 
@@ -97,16 +136,22 @@ function App() {
         return [...prevItems, { ...product, quantity, selectedSize: size, selectedColor: color, cartItemId }];
       }
     });
-    setToastMessage(`${product.name} foi adicionado!`);
+    setToast({ message: `${product.name} foi adicionado!`, icon: 'success' });
   };
 
   const handleQuantityChange = (cartItemId: string, delta: number) => {
     setCartItems(currentItems =>
-      currentItems.map(item =>
-        item.cartItemId === cartItemId
-          ? { ...item, quantity: Math.max(1, item.quantity + delta) }
-          : item
-      )
+      currentItems.map(item => {
+        if (item.cartItemId === cartItemId) {
+          const newQuantity = Math.max(1, item.quantity + delta);
+          if (newQuantity > item.stock) {
+            setToast({ message: `Apenas ${item.stock} unidades de ${item.name} em estoque.`, icon: 'error' });
+            return item;
+          }
+          return { ...item, quantity: newQuantity };
+        }
+        return item;
+      })
     );
   };
 
@@ -135,8 +180,10 @@ function App() {
     setWishlistItems(prevItems => {
       const isWishlisted = prevItems.some(item => item.id === product.id);
       if (isWishlisted) {
+        setToast({ message: 'Removido da Lista de Desejos', icon: 'heart' });
         return prevItems.filter(item => item.id !== product.id);
       } else {
+        setToast({ message: 'Adicionado à Lista de Desejos', icon: 'heart' });
         return [...prevItems, product];
       }
     });
@@ -163,16 +210,14 @@ function App() {
                     onNavigate={navigateTo}
                   />;
         }
-        return <Hero products={products} onNavigate={navigateTo}/>;
-      case 'leadCapture':
-        return <LeadCapture onNavigate={() => navigateTo('home')} />;
+        return <Hero onNavigate={navigateTo} />;
       case 'checkout':
         return <Checkout cartItems={cartItems} onPlaceOrder={handlePlaceOrder} />;
       case 'orderConfirmation':
         if (completedOrder) {
           return <OrderConfirmation order={completedOrder} onContinueShopping={() => navigateTo('shop')} />
         }
-        return <Hero products={products} onNavigate={navigateTo}/>;
+        return <Hero onNavigate={navigateTo} />;
       case 'shop':
         return <Shop 
                   products={products} 
@@ -193,15 +238,16 @@ function App() {
         return <Help />;
       case 'login':
         return <Login />;
+      case 'leadCapture':
+        return <LeadCapture onNavigate={() => navigateTo('shop')} />;
       case 'home':
       default:
         return (
           <>
-            <Hero products={products} onNavigate={navigateTo} />
-            <CtaSection onNavigate={() => navigateTo('leadCapture')} />
+            <Hero onNavigate={navigateTo} />
             <ProductShowcase products={products} onNavigate={navigateTo} />
             <FeaturedCategories onNavigate={navigateTo} />
-            <VideoAction />
+            <VideoAction onOpenVideo={openVideoModal} />
             <Spotlight onNavigate={navigateTo} />
             <FeaturedProducts 
                 products={products.slice(0,3)} 
@@ -228,9 +274,11 @@ function App() {
       <main>
         {renderPage()}
       </main>
-      {toastMessage && <Toast message={toastMessage} />}
-      <AiAssistant products={products} onNavigate={navigateTo} />
+      {toast && <Toast message={toast.message} icon={toast.icon} />}
+      {isVideoModalOpen && <VideoModal key={currentVideoUrl} videoUrl={currentVideoUrl} onClose={closeVideoModal} />}
       <Footer onNavigate={navigateTo}/>
+      
+      {/* WhatsApp Button */}
       <div className="fixed bottom-6 right-6 z-50">
         <a 
           href="https://wa.me/5521985516518?text=Olá!%20Gostaria%20de%20saber%20mais%20sobre%20os%20produtos."

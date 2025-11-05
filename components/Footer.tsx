@@ -74,13 +74,13 @@ const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
           </div>
         </div>
 
-        <div className="mt-12 pt-8 border-t border-gray-200 dark:border-gray-800 flex flex-col md:flex-row justify-between items-center text-sm">
-          <p className="text-gray-400 dark:text-gray-500 order-2 md:order-1 mt-4 md:mt-0">&copy; {new Date().getFullYear()} Recreio Imports. Todos os direitos reservados.</p>
-           <div className="flex space-x-6 order-1 md:order-2">
-            <button onClick={() => onNavigate('leadCapture')} className="hover:text-black dark:hover:text-white">Receba Ofertas</button>
-            <button onClick={() => onNavigate('help')} className="hover:text-black dark:hover:text-white">Ajuda</button>
-            <button onClick={() => onNavigate('login')} className="hover:text-black dark:hover:text-white">Entrar</button>
-           </div>
+        <div className="mt-12 pt-8 border-t border-gray-200 dark:border-gray-800 flex flex-col-reverse md:flex-row justify-between items-center text-sm gap-4">
+            <div className="flex items-center gap-6 text-gray-500 dark:text-gray-400">
+                <button onClick={() => onNavigate('leadCapture')} className="hover:text-black dark:hover:text-white transition-colors">Receba Ofertas</button>
+                <button onClick={() => onNavigate('help')} className="hover:text-black dark:hover:text-white transition-colors">Ajuda</button>
+                <button onClick={() => onNavigate('login')} className="hover:text-black dark:hover:text-white transition-colors">Entrar</button>
+            </div>
+            <p className="text-gray-400 dark:text-gray-500">&copy; {new Date().getFullYear()} Recreio Imports. Todos os direitos reservados.</p>
         </div>
       </div>
     </footer>

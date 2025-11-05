@@ -1,4 +1,3 @@
-
 import React from 'react';
 // FIX: Corrected import path for Order type.
 import { Order } from '../data/products';
@@ -28,7 +27,7 @@ const OrderConfirmation: React.FC<OrderConfirmationProps> = ({ order, onContinue
                         {order.items.map(item => (
                             <div key={item.cartItemId} className="flex justify-between items-center">
                                 <div className="flex items-center gap-4">
-                                    <img src={item.image} alt={item.name} className="w-16 h-16 object-cover rounded-md" />
+                                    <img src={item.image} alt={item.name} className="w-16 h-16 object-cover rounded-md" onContextMenu={(e) => e.preventDefault()} />
                                     <div>
                                         <p className="font-semibold">{item.name}</p>
                                         <p className="text-sm text-gray-500 dark:text-gray-400">Qtd: {item.quantity}</p>
