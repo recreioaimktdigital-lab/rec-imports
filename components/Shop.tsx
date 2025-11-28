@@ -1,4 +1,5 @@
-import React, { useState, useMemo, useEffect } from 'react';
+
+import React, { useState, useMemo } from 'react';
 // FIX: Corrected import path for Product and Filters types.
 import { Product, Filters } from '../data/products';
 import { HeartIcon, HeartIconSolid, PlusIcon, MinusIcon, StarIcon } from './Icons';
@@ -8,9 +9,13 @@ interface ShopProps {
   onNavigate: (page: string, product: Product) => void;
   wishlistItems: Product[];
   onToggleWishlist: (product: Product) => void;
-  initialFilters: Filters;
+  filters: Filters;
   onFiltersChange: (filters: Filters) => void;
 }
+
+const normalizeText = (text: string) => {
+  return text.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+};
 
 const StarRatingDisplay: React.FC<{ rating: number }> = ({ rating }) => (
     <div className="flex items-center gap-1">
@@ -24,12 +29,13 @@ const StarRatingDisplay: React.FC<{ rating: number }> = ({ rating }) => (
 const AccordionItem: React.FC<{ title: string; children: React.ReactNode; defaultOpen?: boolean }> = ({ title, children, defaultOpen = true }) => {
     const [isOpen, setIsOpen] = useState(defaultOpen);
     return (
-        <div className="border-b border-gray-200 dark:border-gray-700">
+        <div className="border-b border-blue-200 dark:border-gray-700">
             <button
                 onClick={() => setIsOpen(!isOpen)}
                 className="w-full flex justify-between items-center py-4"
             >
-                <h3 className="text-md font-bold uppercase">{title}</h3>
+                {/* Increased title size to text-lg */}
+                <h3 className="text-lg font-bold uppercase">{title}</h3>
                 {isOpen ? <MinusIcon className="w-5 h-5" /> : <PlusIcon className="w-5 h-5" />}
             </button>
             <div className={`transition-all duration-300 ease-in-out overflow-hidden ${isOpen ? 'max-h-[1000px]' : 'max-h-0'}`}>
@@ -41,13 +47,9 @@ const AccordionItem: React.FC<{ title: string; children: React.ReactNode; defaul
     );
 };
 
-const Shop: React.FC<ShopProps> = ({ products, onNavigate, wishlistItems, onToggleWishlist, initialFilters, onFiltersChange }) => {
-  const [filters, setFilters] = useState<Filters>(initialFilters);
+const Shop: React.FC<ShopProps> = ({ products, onNavigate, wishlistItems, onToggleWishlist, filters, onFiltersChange }) => {
   const [sortOrder, setSortOrder] = useState('featured');
-  
-  useEffect(() => {
-      setFilters(initialFilters);
-  }, [initialFilters]);
+  const [showFiltersMobile, setShowFiltersMobile] = useState(false);
 
   const filterOptions = useMemo(() => {
     const allCategories = ['Todos', ...Array.from(new Set(products.map(p => p.category)))];
@@ -64,7 +66,41 @@ const Shop: React.FC<ShopProps> = ({ products, onNavigate, wishlistItems, onTogg
         const brandMatch = filters.brand.length === 0 || filters.brand.includes(p.brand);
         const genderMatch = filters.gender.length === 0 || filters.gender.includes(p.gender);
         const styleMatch = filters.style.length === 0 || filters.style.includes(p.style);
-        return categoryMatch && brandMatch && genderMatch && styleMatch;
+        
+        let queryMatch = true;
+        if (filters.query) {
+             const normalizedQuery = normalizeText(filters.query);
+             const pName = normalizeText(p.name);
+             const pBrand = normalizeText(p.brand);
+             const pCategory = normalizeText(p.category);
+             const pDesc = normalizeText(p.desc);
+             const pStyle = normalizeText(p.style);
+             const pLongDesc = normalizeText(p.longDescription || '');
+
+             const isClothingQuery = normalizedQuery === 'roupas' || normalizedQuery === 'roupa';
+             const clothingCategories = ['roupas', 'moda praia', 'life style']; // Normalized categories that are considered "roupas"
+             
+             const matchesText = pName.includes(normalizedQuery) ||
+                pBrand.includes(normalizedQuery) ||
+                pCategory.includes(normalizedQuery) ||
+                pDesc.includes(normalizedQuery) ||
+                pStyle.includes(normalizedQuery) ||
+                pLongDesc.includes(normalizedQuery);
+
+             if (isClothingQuery) {
+                 // Check if the product's category falls under "clothing"
+                 // pCategory is already normalized
+                 if (clothingCategories.includes(pCategory) || matchesText) {
+                     queryMatch = true;
+                 } else {
+                     queryMatch = false;
+                 }
+             } else {
+                 queryMatch = matchesText;
+             }
+        }
+
+        return categoryMatch && brandMatch && genderMatch && styleMatch && queryMatch;
     });
 
     const sortable = [...filtered];
@@ -84,34 +120,31 @@ const Shop: React.FC<ShopProps> = ({ products, onNavigate, wishlistItems, onTogg
     }
   }, [products, filters, sortOrder]);
   
-  const handleFilterChange = (filterType: keyof Filters, value: string) => {
-    setFilters(prevFilters => {
-        let newFilters: Filters;
-        if (filterType === 'category') {
-             newFilters = {
-                ...prevFilters,
-                category: value,
-            };
-        } else {
-            const currentValues = prevFilters[filterType] as string[];
-            const newValues = currentValues.includes(value)
-                ? currentValues.filter(v => v !== value)
-                : [...currentValues, value];
-            newFilters = { ...prevFilters, [filterType]: newValues };
-        }
-        onFiltersChange(newFilters);
-        return newFilters;
-    });
+  const handleFilterChange = (filterType: keyof Omit<Filters, 'query'>, value: string) => {
+    let newFilters: Filters;
+    if (filterType === 'category') {
+         newFilters = {
+            ...filters,
+            category: value,
+        };
+    } else {
+        const currentValues = filters[filterType] as string[];
+        const newValues = currentValues.includes(value)
+            ? currentValues.filter(v => v !== value)
+            : [...currentValues, value];
+        newFilters = { ...filters, [filterType]: newValues };
+    }
+    onFiltersChange(newFilters);
   };
 
   const clearFilters = () => {
-    const clearedFilters = {
+    const clearedFilters: Filters = {
         category: 'Todos',
         brand: [],
         gender: [],
         style: [],
+        query: '',
     };
-    setFilters(clearedFilters);
     onFiltersChange(clearedFilters);
   };
 
@@ -123,14 +156,28 @@ const Shop: React.FC<ShopProps> = ({ products, onNavigate, wishlistItems, onTogg
   const CheckboxFilter: React.FC<{ label: string; isChecked: boolean; onChange: () => void; }> = ({ label, isChecked, onChange }) => (
     <label className="flex items-center space-x-3 cursor-pointer">
         <input type="checkbox" checked={isChecked} onChange={onChange} className="h-4 w-4 rounded border-gray-300 text-brand-yellow focus:ring-brand-yellow" />
-        <span className="text-sm text-gray-600 dark:text-gray-300">{label}</span>
+        {/* Increased label size to text-base */}
+        <span className="text-base text-gray-600 dark:text-gray-300">{label}</span>
     </label>
   );
 
   return (
-    <div className="container mx-auto px-4 py-12 md:py-20 min-h-[70vh]">
+    <div className="container mx-auto px-4 py-8 md:py-20 min-h-[70vh]">
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-        <aside className="lg:col-span-1">
+        
+        {/* Mobile Filter Toggle */}
+        <div className="lg:hidden col-span-1">
+            <button 
+                onClick={() => setShowFiltersMobile(!showFiltersMobile)}
+                className="w-full bg-white dark:bg-gray-800 text-black dark:text-white font-bold py-3 px-4 rounded-lg flex justify-between items-center border border-blue-200 dark:border-gray-700"
+            >
+                <span>{showFiltersMobile ? 'Ocultar Filtros' : 'Filtrar Produtos'}</span>
+                {showFiltersMobile ? <MinusIcon className="w-5 h-5"/> : <PlusIcon className="w-5 h-5"/>}
+            </button>
+        </div>
+
+        {/* Sidebar - Hidden on mobile unless toggled */}
+        <aside className={`${showFiltersMobile ? 'block' : 'hidden'} lg:block lg:col-span-1`}>
           <div className="sticky top-24">
              <div className="flex justify-between items-center mb-4">
                 <h2 className="text-xl font-bold uppercase">Filtros</h2>
@@ -145,7 +192,8 @@ const Shop: React.FC<ShopProps> = ({ products, onNavigate, wishlistItems, onTogg
               <ul className="space-y-2">
                 {filterOptions.categories.map(category => (
                   <li key={category}>
-                    <button onClick={() => handleFilterChange('category', category)} className={`w-full text-left px-2 py-1 rounded text-sm ${filters.category === category ? 'font-bold text-black dark:text-white bg-gray-200 dark:bg-gray-700' : 'text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white'}`}>
+                    {/* Increased category list item size to text-base */}
+                    <button onClick={() => handleFilterChange('category', category)} className={`w-full text-left px-2 py-1 rounded text-base ${filters.category === category ? 'font-bold text-black dark:text-white bg-blue-200 dark:bg-gray-700' : 'text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white'}`}>
                       {category}
                     </button>
                   </li>
@@ -193,14 +241,21 @@ const Shop: React.FC<ShopProps> = ({ products, onNavigate, wishlistItems, onTogg
 
         <main className="lg:col-span-3">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-4">
-             <p className="text-sm text-gray-500 dark:text-gray-400 order-2 sm:order-1">{sortedAndFilteredProducts.length} produtos encontrados</p>
+             <div className="order-2 sm:order-1">
+                <p className="text-sm text-gray-500 dark:text-gray-400">{sortedAndFilteredProducts.length} produtos encontrados</p>
+                {filters.query && (
+                    <div className="flex items-center gap-2 text-sm mt-1">
+                        <span>Resultados para: <span className="font-bold">"{filters.query}"</span></span>
+                    </div>
+                )}
+             </div>
              <div className="flex items-center gap-2 order-1 sm:order-2 w-full sm:w-auto">
                 <label htmlFor="sort-order" className="text-sm font-medium flex-shrink-0">Ordenar por:</label>
                 <select
                     id="sort-order"
                     value={sortOrder}
                     onChange={(e) => setSortOrder(e.target.value)}
-                    className="w-full sm:w-auto bg-gray-100 dark:bg-gray-800 text-black dark:text-white text-sm rounded-md p-2 border border-transparent focus:outline-none focus:ring-2 focus:ring-brand-yellow"
+                    className="w-full sm:w-auto bg-white dark:bg-gray-800 text-black dark:text-white text-sm rounded-md p-2 border border-blue-200 dark:border-transparent focus:outline-none focus:ring-2 focus:ring-brand-yellow"
                 >
                     <option value="featured">Destaques</option>
                     <option value="newest-desc">Novidades</option>
@@ -216,7 +271,7 @@ const Shop: React.FC<ShopProps> = ({ products, onNavigate, wishlistItems, onTogg
                  const isWishlisted = wishlistItems.some(item => item.id === product.id);
                  const isOutOfStock = product.stock === 0;
                  return (
-                  <div key={product.id} className="group rounded-lg bg-gray-100 dark:bg-[#181818] flex flex-col cursor-pointer" onClick={() => onNavigate('productDetail', product)}>
+                  <div key={product.id} className="group rounded-lg bg-white dark:bg-[#181818] flex flex-col cursor-pointer shadow-sm hover:shadow-md transition-shadow" onClick={() => onNavigate('productDetail', product)}>
                      <div className="relative overflow-hidden">
                         {isOutOfStock && (
                             <div className="absolute top-3 left-3 bg-red-500 text-white text-xs font-bold uppercase px-2 py-1 rounded-full z-10">
@@ -242,7 +297,9 @@ const Shop: React.FC<ShopProps> = ({ products, onNavigate, wishlistItems, onTogg
             </div>
           ) : (
             <div className="flex flex-col items-center justify-center h-full text-center py-20">
-                <p className="text-xl text-gray-600 dark:text-gray-400">Nenhum produto encontrado com os filtros selecionados.</p>
+                <h3 className="text-2xl font-bold">Nenhum produto encontrado.</h3>
+                <p className="text-gray-600 dark:text-gray-400 mt-2">Tente ajustar sua busca ou filtros para encontrar o que procura.</p>
+                <button onClick={clearFilters} className="mt-4 bg-brand-yellow text-black font-semibold py-2 px-6 rounded-full hover:bg-yellow-300 transition-colors">Limpar Filtros</button>
             </div>
           )}
         </main>

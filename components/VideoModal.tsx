@@ -1,3 +1,4 @@
+
 import React, { useEffect, useRef } from 'react';
 import { CloseIcon } from './Icons';
 
@@ -7,7 +8,9 @@ interface VideoModalProps {
 }
 
 const VideoModal: React.FC<VideoModalProps> = ({ videoUrl, onClose }) => {
-  // Effect for keyboard shortcuts
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  // Effect for keyboard shortcuts and autoplay handling
   useEffect(() => {
     const handleEsc = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
@@ -15,6 +18,24 @@ const VideoModal: React.FC<VideoModalProps> = ({ videoUrl, onClose }) => {
       }
     };
     window.addEventListener('keydown', handleEsc);
+    
+    // Tentar reproduzir automaticamente com som
+    if (videoRef.current) {
+        videoRef.current.volume = 0.5; // Iniciar com 50% do volume
+        const playPromise = videoRef.current.play();
+        
+        if (playPromise !== undefined) {
+            playPromise.catch(error => {
+                // Se o navegador bloquear o autoplay com som, tentar mutado
+                console.log("Autoplay com som bloqueado, tentando mutado:", error);
+                if (videoRef.current) {
+                    videoRef.current.muted = true;
+                    videoRef.current.play();
+                }
+            });
+        }
+    }
+
     return () => {
       window.removeEventListener('keydown', handleEsc);
     };
@@ -39,10 +60,10 @@ const VideoModal: React.FC<VideoModalProps> = ({ videoUrl, onClose }) => {
           <CloseIcon className="w-8 h-8" />
         </button>
         <video
+          ref={videoRef}
           className="w-full h-full object-contain"
           src={videoUrl}
           controls
-          autoPlay
           loop
           playsInline // Important for iOS
           controlsList="nodownload"

@@ -1,8 +1,8 @@
+
 import React, { useState, useRef, useEffect } from 'react';
 import { GoogleGenAI, Chat, FunctionDeclaration, Type } from "@google/genai";
 import { AiAssistantIcon, CloseIcon } from './Icons';
-// FIX: Corrected import path for Product type.
-import { Product } from '../data/products';
+import { Product, Filters } from '../data/products';
 
 interface Message {
   sender: 'user' | 'ai';
@@ -12,7 +12,7 @@ interface Message {
 
 interface AiAssistantProps {
   products: Product[];
-  onNavigate: (page: string, product: Product) => void;
+  onNavigate: (page: string, product?: Product, filters?: Partial<Filters>) => void;
 }
 
 const searchProductsFunctionDeclaration: FunctionDeclaration = {
@@ -134,10 +134,13 @@ const AiAssistant: React.FC<AiAssistantProps> = ({ products, onNavigate }) => {
 
   return (
     <>
-      <div className={`fixed bottom-24 left-4 sm:left-6 z-50 w-[calc(100%-2rem)] sm:w-96 h-[60vh] bg-gray-100 dark:bg-[#181818] rounded-xl shadow-2xl flex flex-col transition-all duration-300 ease-in-out ${isOpen ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10 pointer-events-none'}`}>
-        <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700 flex-shrink-0">
-          <h3 className="font-bold text-lg text-black dark:text-white">Assistente de IA</h3>
-          <button onClick={() => setIsOpen(false)} className="text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white">
+      <div className={`fixed bottom-28 left-4 md:left-6 z-[60] w-[calc(100%-2rem)] sm:w-96 h-[60vh] max-h-[600px] bg-white/95 dark:bg-[#181818]/95 backdrop-blur-md rounded-xl shadow-2xl flex flex-col transition-all duration-300 ease-in-out origin-bottom-left ${isOpen ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-95 translate-y-4 pointer-events-none'}`}>
+        <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700 flex-shrink-0 bg-brand-yellow rounded-t-xl">
+          <div className="flex items-center gap-2">
+            <AiAssistantIcon className="w-6 h-6 text-black" />
+            <h3 className="font-bold text-lg text-black">Recreio AI</h3>
+          </div>
+          <button onClick={() => setIsOpen(false)} className="text-black hover:bg-black/10 rounded-full p-1">
             <CloseIcon className="w-6 h-6" />
           </button>
         </div>
@@ -145,20 +148,19 @@ const AiAssistant: React.FC<AiAssistantProps> = ({ products, onNavigate }) => {
         <div ref={chatBodyRef} className="flex-1 p-4 space-y-4 overflow-y-auto">
           {messages.map((msg, index) => (
             <div key={index} className={`flex items-end gap-2 ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
-              <div className={`max-w-xs md:max-w-md lg:max-w-lg px-4 py-2 rounded-2xl ${msg.sender === 'user' ? 'bg-brand-yellow text-black' : 'bg-gray-300 dark:bg-gray-700 text-black dark:text-white'}`}>
-                <p className="text-sm whitespace-pre-wrap">{msg.text}</p>
+              <div className={`max-w-[85%] px-4 py-3 rounded-2xl shadow-sm ${msg.sender === 'user' ? 'bg-brand-yellow text-black rounded-br-none' : 'bg-gray-200 dark:bg-gray-700 text-black dark:text-white rounded-bl-none'}`}>
+                <p className="text-sm whitespace-pre-wrap leading-relaxed">{msg.text}</p>
                 {msg.products && msg.products.length > 0 && (
-                    <div className="mt-3 grid grid-cols-1 gap-2 border-t border-gray-400/50 pt-2">
+                    <div className="mt-3 grid grid-cols-1 gap-2 border-t border-gray-400/20 pt-2">
                         {msg.products.map(product => (
-                            <div key={product.id} className="flex items-center gap-3 p-2 rounded-lg bg-white/50 dark:bg-gray-800/50">
-                                <img src={product.image} alt={product.name} className="w-14 h-14 object-cover rounded-md" onContextMenu={(e) => e.preventDefault()} />
-                                <div className="flex-1">
-                                    <p className="font-bold text-sm text-black dark:text-white">{product.name}</p>
-                                    <p className="text-xs text-gray-600 dark:text-gray-300">R$ {product.price.toFixed(2)}</p>
+                            <div key={product.id} className="flex items-center gap-3 p-2 rounded-lg bg-white/60 dark:bg-black/40 hover:bg-white/80 dark:hover:bg-black/60 transition-colors cursor-pointer" onClick={() => handleProductClick(product)}>
+                                <img src={product.image} alt={product.name} className="w-12 h-12 object-cover rounded-md" onContextMenu={(e) => e.preventDefault()} />
+                                <div className="flex-1 min-w-0">
+                                    <p className="font-bold text-xs text-black dark:text-white truncate">{product.name}</p>
+                                    <p className="text-xs text-gray-600 dark:text-gray-400">R$ {product.price.toFixed(2)}</p>
                                 </div>
                                 <button 
-                                    onClick={() => handleProductClick(product)}
-                                    className="bg-brand-yellow text-black text-xs font-semibold py-1.5 px-3 rounded-full hover:bg-yellow-300 transition-colors"
+                                    className="bg-brand-yellow text-black text-[10px] font-bold py-1 px-2 rounded-full hover:bg-yellow-300 transition-colors uppercase"
                                 >
                                     Ver
                                 </button>
@@ -171,7 +173,7 @@ const AiAssistant: React.FC<AiAssistantProps> = ({ products, onNavigate }) => {
           ))}
            {isLoading && (
             <div className="flex items-end gap-2 justify-start">
-              <div className="max-w-xs md:max-w-md lg:max-w-lg px-4 py-2 rounded-2xl bg-gray-300 dark:bg-gray-700 text-black dark:text-white">
+              <div className="px-4 py-3 rounded-2xl rounded-bl-none bg-gray-200 dark:bg-gray-700 text-black dark:text-white">
                 <div className="flex items-center space-x-1">
                   <span className="w-2 h-2 bg-gray-400 rounded-full animate-pulse delay-75"></span>
                   <span className="w-2 h-2 bg-gray-400 rounded-full animate-pulse delay-150"></span>
@@ -182,18 +184,18 @@ const AiAssistant: React.FC<AiAssistantProps> = ({ products, onNavigate }) => {
           )}
         </div>
         
-        <div className="p-4 border-t border-gray-200 dark:border-gray-700 flex-shrink-0">
+        <div className="p-4 border-t border-gray-200 dark:border-gray-700 flex-shrink-0 bg-gray-50 dark:bg-black/20 rounded-b-xl">
           <form onSubmit={handleSendMessage} className="flex items-center gap-2">
             <input
               type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder="Digite sua mensagem..."
-              className="flex-1 bg-gray-200 dark:bg-gray-800 text-black dark:text-white placeholder-gray-500 dark:placeholder-gray-400 w-full px-4 py-2 rounded-full border border-transparent focus:outline-none focus:ring-2 focus:ring-brand-yellow"
+              className="flex-1 bg-white dark:bg-gray-800 text-black dark:text-white placeholder-gray-500 dark:placeholder-gray-400 w-full px-4 py-3 rounded-full border border-gray-200 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-brand-yellow shadow-sm"
               disabled={isLoading}
             />
-            <button type="submit" className="bg-brand-yellow text-black p-3 rounded-full hover:bg-yellow-300 disabled:bg-gray-600 transition-colors duration-300" disabled={isLoading || !input.trim()}>
-              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"></path></svg>
+            <button type="submit" className="bg-brand-yellow text-black p-3 rounded-full hover:bg-yellow-300 disabled:bg-gray-300 disabled:text-gray-500 transition-all duration-200 flex-shrink-0 shadow-md" disabled={isLoading || !input.trim()}>
+              <svg className="w-5 h-5 transform rotate-90" fill="currentColor" viewBox="0 0 20 20"><path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"></path></svg>
             </button>
           </form>
         </div>
@@ -202,10 +204,10 @@ const AiAssistant: React.FC<AiAssistantProps> = ({ products, onNavigate }) => {
       <div className="fixed bottom-6 left-6 z-50">
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="bg-brand-yellow hover:bg-yellow-300 text-black rounded-full p-4 shadow-lg transition-transform duration-300 hover:scale-110 inline-block"
+          className="bg-white text-black hover:bg-brand-yellow hover:text-black border-2 border-gray-300 rounded-full p-4 shadow-[0_0_20px_rgba(0,0,0,0.2)] dark:shadow-[0_0_20px_rgba(255,255,255,0.2)] transition-all duration-300 hover:scale-110 active:scale-95 flex items-center justify-center group"
           aria-label="Abrir Assistente de IA"
         >
-          <AiAssistantIcon className="w-8 h-8" />
+          <AiAssistantIcon className="w-8 h-8 transition-colors" />
         </button>
       </div>
     </>

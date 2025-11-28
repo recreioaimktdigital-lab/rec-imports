@@ -1,3 +1,4 @@
+
 import React from 'react';
 
 const Help: React.FC = () => {
@@ -22,7 +23,7 @@ const Help: React.FC = () => {
           </div>
           <div>
             <h3 className="font-semibold">Como entro em contato com o suporte?</h3>
-            <p className="text-gray-600 dark:text-gray-400">Você pode nos contatar através do nosso chat no WhatsApp ou enviando um e-mail para <a href="mailto:suporte@recreioimports.com" className="text-brand-yellow underline">suporte@recreioimports.com</a>.</p>
+            <p className="text-gray-600 dark:text-gray-400">Você pode nos contatar através do nosso chat no WhatsApp ou enviando um e-mail para <a href="mailto:suporte@recreioimports.com" className="text-blue-700 font-bold underline hover:text-blue-500">suporte@recreioimports.com</a>.</p>
           </div>
         </div>
       </div>

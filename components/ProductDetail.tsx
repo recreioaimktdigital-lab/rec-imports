@@ -39,7 +39,7 @@ const ReviewForm: React.FC<{ onSubmit: (review: { rating: number, comment: strin
     };
 
     if (submitted) {
-        return <p className="text-green-500">Obrigado pela sua avaliação!</p>;
+        return <p className="text-brand-yellow font-semibold">Obrigado pela sua avaliação!</p>;
     }
 
     return (

@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 
 interface LeadCaptureProps {
@@ -22,7 +23,7 @@ const LeadCapture: React.FC<LeadCaptureProps> = ({ onNavigate }) => {
     return (
         <div className="relative min-h-[80vh] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-gray-100 dark:bg-black">
             <div className="absolute inset-0 overflow-hidden">
-                <img src="https://picsum.photos/1920/1080?random=42" alt="Athlete" className="w-full h-full object-cover" onContextMenu={(e) => e.preventDefault()} />
+                <img src="https://images.pexels.com/photos/1552242/pexels-photo-1552242.jpeg?auto=compress&cs=tinysrgb&w=1920" alt="Athlete" className="w-full h-full object-cover" onContextMenu={(e) => e.preventDefault()} />
                 <div className="absolute inset-0 bg-black bg-opacity-70"></div>
             </div>
             
@@ -39,15 +40,16 @@ const LeadCapture: React.FC<LeadCaptureProps> = ({ onNavigate }) => {
                             <div className="rounded-md shadow-sm -space-y-px">
                                 <div>
                                     <label htmlFor="name" className="sr-only">Nome</label>
-                                    <input id="name" name="name" type="text" required value={name} onChange={e => setName(e.target.value)} className="appearance-none rounded-none relative block w-full px-3 py-3 border border-gray-700 bg-gray-900/50 placeholder-gray-400 focus:outline-none focus:ring-brand-yellow focus:border-brand-yellow focus:z-10 sm:text-sm rounded-t-md" placeholder="Nome" />
+                                    {/* Updated Inputs for better visibility */}
+                                    <input id="name" name="name" type="text" required value={name} onChange={e => setName(e.target.value)} className="appearance-none rounded-none relative block w-full px-3 py-3 border border-gray-600 bg-gray-900 text-white placeholder-gray-400 focus:outline-none focus:ring-brand-yellow focus:border-brand-yellow focus:z-10 sm:text-sm rounded-t-md" placeholder="Nome" />
                                 </div>
                                 <div>
                                     <label htmlFor="email-address" className="sr-only">Email</label>
-                                    <input id="email-address" name="email" type="email" autoComplete="email" required value={email} onChange={e => setEmail(e.target.value)} className="appearance-none rounded-none relative block w-full px-3 py-3 border border-gray-700 bg-gray-900/50 placeholder-gray-400 focus:outline-none focus:ring-brand-yellow focus:border-brand-yellow focus:z-10 sm:text-sm" placeholder="Seu melhor e-mail" />
+                                    <input id="email-address" name="email" type="email" autoComplete="email" required value={email} onChange={e => setEmail(e.target.value)} className="appearance-none rounded-none relative block w-full px-3 py-3 border border-gray-600 bg-gray-900 text-white placeholder-gray-400 focus:outline-none focus:ring-brand-yellow focus:border-brand-yellow focus:z-10 sm:text-sm" placeholder="Seu melhor e-mail" />
                                 </div>
                                 <div>
                                     <label htmlFor="whatsapp" className="sr-only">WhatsApp</label>
-                                    <input id="whatsapp" name="whatsapp" type="tel" required value={whatsapp} onChange={e => setWhatsapp(e.target.value)} className="appearance-none rounded-none relative block w-full px-3 py-3 border border-gray-700 bg-gray-900/50 placeholder-gray-400 focus:outline-none focus:ring-brand-yellow focus:border-brand-yellow focus:z-10 sm:text-sm rounded-b-md" placeholder="WhatsApp com DDD" />
+                                    <input id="whatsapp" name="whatsapp" type="tel" required value={whatsapp} onChange={e => setWhatsapp(e.target.value)} className="appearance-none rounded-none relative block w-full px-3 py-3 border border-gray-600 bg-gray-900 text-white placeholder-gray-400 focus:outline-none focus:ring-brand-yellow focus:border-brand-yellow focus:z-10 sm:text-sm rounded-b-md" placeholder="WhatsApp com DDD" />
                                 </div>
                             </div>
                             <div>

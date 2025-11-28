@@ -12,7 +12,7 @@ const OrderConfirmation: React.FC<OrderConfirmationProps> = ({ order, onContinue
     return (
         <div className="container mx-auto px-4 py-12 md:py-20">
             <div className="max-w-3xl mx-auto bg-gray-100 dark:bg-[#181818] rounded-lg p-8 text-center">
-                <CheckCircleIcon className="w-16 h-16 text-green-500 mx-auto mb-4" />
+                <CheckCircleIcon className="w-16 h-16 text-brand-yellow mx-auto mb-4" />
                 <h1 className="text-4xl md:text-5xl font-display uppercase text-brand-yellow">MUITO OBRIGADO!</h1>
                 <p className="mt-4 text-lg text-gray-600 dark:text-gray-300">
                     Olá {order.customer.name}, seu pedido foi recebido com sucesso.

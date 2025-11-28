@@ -1,3 +1,4 @@
+
 import React, { useRef } from 'react';
 import { ArrowLeftIcon, ArrowRightIcon } from './Icons';
 // FIX: Corrected import path for Product and Filters types.
@@ -8,16 +9,34 @@ interface SpotlightProps {
 }
 
 const spotlightItems = [
-  { name: 'Air Jordan 1', image: 'https://picsum.photos/800/800?random=101', filter: { style: ['Basquete'] } },
-  { name: 'Air Max', image: 'https://picsum.photos/800/800?random=102', filter: { brand: ['Nike'] } },
-  { name: 'Camisetas', image: 'https://picsum.photos/800/800?random=103', filter: { category: 'Roupas' } },
-  { name: 'Dunk', image: 'https://picsum.photos/800/800?random=104', filter: { brand: ['Nike'] } },
-  { name: 'Lifestyle', image: 'https://picsum.photos/800/800?random=105', filter: { category: 'Life Style' } },
-  { name: 'Moletons', image: 'https://picsum.photos/800/800?random=106', filter: { category: 'Life Style' } },
-  { name: 'Shorts', image: 'https://picsum.photos/800/800?random=107', filter: { category: 'Roupas' } },
-  { name: 'Jaquetas', image: 'https://picsum.photos/800/800?random=108', filter: { category: 'Life Style' } },
-  { name: 'Bolas', image: 'https://picsum.photos/800/800?random=115', filter: { category: 'Artigos Esportivos' } },
-  { name: 'Equipamentos', image: 'https://picsum.photos/800/800?random=116', filter: { category: 'Artigos Esportivos' } },
+  // Gênero
+  { name: 'Moda Masculina', image: 'https://images.pexels.com/photos/1043474/pexels-photo-1043474.jpeg?auto=compress&cs=tinysrgb&w=800', filter: { gender: ['Masculino'] } },
+  { name: 'Moda Feminina', image: 'https://images.pexels.com/photos/1124465/pexels-photo-1124465.jpeg?auto=compress&cs=tinysrgb&w=800', filter: { gender: ['Feminino'] } },
+  { name: 'Para Crianças', image: 'https://images.pexels.com/photos/1619690/pexels-photo-1619690.jpeg?auto=compress&cs=tinysrgb&w=800', filter: { gender: ['Kids'] } },
+  
+  // Marcas
+  { name: 'Nike Exclusivo', image: 'https://images.pexels.com/photos/2529148/pexels-photo-2529148.jpeg?auto=compress&cs=tinysrgb&w=800', filter: { brand: ['Nike'] } },
+  { name: 'Adidas Originals', image: 'https://images.pexels.com/photos/2385477/pexels-photo-2385477.jpeg?auto=compress&cs=tinysrgb&w=800', filter: { brand: ['Adidas'] } },
+  { name: 'Puma Performance', image: 'https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?auto=format&fit=crop&w=800&q=80', filter: { brand: ['Puma'] } },
+  { name: 'Destaques New Balance', image: 'https://images.pexels.com/photos/12628400/pexels-photo-12628400.jpeg?auto=compress&cs=tinysrgb&w=800', filter: { brand: ['New Balance'] } },
+  { name: 'Confira Asics', image: 'https://images.pexels.com/photos/267202/pexels-photo-267202.jpeg?auto=compress&cs=tinysrgb&w=800', filter: { brand: ['Asics'] } },
+  
+  // Estilos
+  { name: 'Equipamentos de Corrida', image: 'https://images.pexels.com/photos/1571939/pexels-photo-1571939.jpeg?auto=compress&cs=tinysrgb&w=800', filter: { style: ['Corrida'] } },
+  { name: 'Estilo Casual', image: 'https://images.pexels.com/photos/786003/pexels-photo-786003.jpeg?auto=compress&cs=tinysrgb&w=800', filter: { style: ['Casual'] } },
+  { name: 'Visual Urbano', image: 'https://images.pexels.com/photos/1478442/pexels-photo-1478442.jpeg?auto=compress&cs=tinysrgb&w=800', filter: { style: ['Urbano'] } },
+  { name: 'Tudo para Basquete', image: 'https://images.pexels.com/photos/866023/pexels-photo-866023.jpeg?auto=compress&cs=tinysrgb&w=800', filter: { style: ['Basquete'] } },
+  { name: 'Foco na Academia', image: 'https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=800', filter: { style: ['Academia'] } },
+  { name: 'Alta Performance', image: 'https://images.pexels.com/photos/3764014/pexels-photo-3764014.jpeg?auto=compress&cs=tinysrgb&w=800', filter: { style: ['Performance'] } },
+
+  // Categorias
+  { name: 'Tênis em Destaque', image: 'https://images.pexels.com/photos/1598505/pexels-photo-1598505.jpeg?auto=compress&cs=tinysrgb&w=800', filter: { category: 'Tênis' } },
+  { name: 'Camisetas & Tops', image: 'https://images.pexels.com/photos/4167544/pexels-photo-4167544.jpeg?auto=compress&cs=tinysrgb&w=800', filter: { category: 'Roupas' } },
+  { name: 'Acessórios Essenciais', image: 'https://images.pexels.com/photos/322207/pexels-photo-322207.jpeg?auto=compress&cs=tinysrgb&w=800', filter: { category: 'Artigos Esportivos' } },
+  { name: 'Jaquetas e Moletons', image: 'https://images.pexels.com/photos/1183266/pexels-photo-1183266.jpeg?auto=compress&cs=tinysrgb&w=800', filter: { category: 'Life Style' } },
+  { name: 'Suplementos', image: 'https://images.pexels.com/photos/4165239/pexels-photo-4165239.jpeg?auto=compress&cs=tinysrgb&w=800', filter: { category: 'Suplementos' } },
+  { name: 'Fisio e Ortopédico', image: 'https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=800', filter: { category: 'Fisio e Ortopédico' } },
+  { name: 'Moda Praia', image: 'https://images.pexels.com/photos/1485637/pexels-photo-1485637.jpeg?auto=compress&cs=tinysrgb&w=800', filter: { category: 'Moda Praia' } },
 ];
 
 const Spotlight: React.FC<SpotlightProps> = ({ onNavigate }) => {
@@ -34,12 +53,15 @@ const Spotlight: React.FC<SpotlightProps> = ({ onNavigate }) => {
   };
 
   return (
-    <section className="py-12 md:py-20 bg-white dark:bg-[#121212]">
+    <section className="py-12 md:py-20 bg-gray-300 dark:bg-[#121212]">
       <div className="container mx-auto px-4 text-center">
-        <h2 className="text-4xl md:text-6xl font-display uppercase text-brand-yellow">
+        <h2 
+          className="text-4xl md:text-6xl font-display uppercase text-brand-yellow"
+          style={{ textShadow: '3px 3px 2px #1F2937' }}
+        >
           Super Ofertas
         </h2>
-        <p className="mt-2 md:mt-4 text-lg text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+        <p className="mt-2 md:mt-4 text-lg text-gray-700 dark:text-gray-300 max-w-3xl mx-auto">
           Aproveite nossos descontos incríveis em produtos selecionados. Corra, é por tempo limitado!
         </p>
         
@@ -63,14 +85,14 @@ const Spotlight: React.FC<SpotlightProps> = ({ onNavigate }) => {
           </div>
            <button 
             onClick={() => scroll('left')}
-            className="absolute top-1/2 -translate-y-1/2 mt-[-2rem] left-1 md:-left-4 p-3 rounded-full bg-gray-200/80 dark:bg-gray-800/80 backdrop-blur-sm hover:bg-gray-300 dark:hover:bg-gray-700 text-black dark:text-white transition-colors z-10"
+            className="absolute top-1/2 -translate-y-1/2 mt-[-2rem] left-1 md:-left-4 p-3 rounded-full bg-gray-200/80 dark:bg-gray-800/80 backdrop-blur-sm hover:bg-gray-300 dark:hover:bg-gray-700 text-black dark:text-white transition-colors z-10 hidden sm:block"
             aria-label="Rolar para a esquerda"
           >
             <ArrowLeftIcon className="w-6 h-6" />
           </button>
           <button 
             onClick={() => scroll('right')}
-            className="absolute top-1/2 -translate-y-1/2 mt-[-2rem] right-1 md:-right-4 p-3 rounded-full bg-gray-200/80 dark:bg-gray-800/80 backdrop-blur-sm hover:bg-gray-300 dark:hover:bg-gray-700 text-black dark:text-white transition-colors z-10"
+            className="absolute top-1/2 -translate-y-1/2 mt-[-2rem] right-1 md:-right-4 p-3 rounded-full bg-gray-200/80 dark:bg-gray-800/80 backdrop-blur-sm hover:bg-gray-300 dark:hover:bg-gray-700 text-black dark:text-white transition-colors z-10 hidden sm:block"
             aria-label="Rolar para a direita"
           >
             <ArrowRightIcon className="w-6 h-6" />

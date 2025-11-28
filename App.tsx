@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import Header from './components/Header';
 import Hero from './components/Hero';
@@ -10,7 +11,7 @@ import Footer from './components/Footer';
 import Cart from './components/Cart';
 import ProductDetail from './components/ProductDetail';
 import Shop from './components/Shop';
-import { WhatsAppIcon, CheckCircleIcon, HeartIconSolid, ExclamationCircleIcon } from './components/Icons';
+import { CheckCircleIcon, HeartIconSolid, ExclamationCircleIcon, WhatsAppIcon } from './components/Icons';
 import Checkout from './components/Checkout';
 import OrderConfirmation from './components/OrderConfirmation';
 import Wishlist from './components/Wishlist';
@@ -26,8 +27,8 @@ interface ToastProps {
 }
 
 const Toast: React.FC<ToastProps> = ({ message, icon }) => (
-  <div className="fixed bottom-24 md:bottom-10 left-1/2 -translate-x-1/2 z-[60] flex items-center gap-3 bg-black dark:bg-white text-white dark:text-black py-3 px-6 rounded-full shadow-lg animate-fade-in">
-    {icon === 'success' && <CheckCircleIcon className="w-6 h-6 text-green-500" />}
+  <div className="fixed bottom-32 md:bottom-20 left-1/2 -translate-x-1/2 z-[60] flex items-center gap-3 bg-black dark:bg-white text-white dark:text-black py-3 px-6 rounded-full shadow-lg animate-fade-in">
+    {icon === 'success' && <CheckCircleIcon className="w-6 h-6 text-brand-yellow" />}
     {icon === 'heart' && <HeartIconSolid className="w-6 h-6 text-red-500" />}
     {icon === 'error' && <ExclamationCircleIcon className="w-6 h-6 text-red-500" />}
     <span className="font-semibold">{message}</span>
@@ -50,6 +51,7 @@ function App() {
     brand: [],
     gender: [],
     style: [],
+    query: '',
   };
   const [activeFilters, setActiveFilters] = useState<Filters>(initialFilters);
 
@@ -100,7 +102,7 @@ function App() {
     }
     
     if (filters) {
-      setActiveFilters(prev => ({ ...initialFilters, ...filters }));
+      setActiveFilters({ ...initialFilters, ...filters });
     }
     
     setCurrentPage(page);
@@ -224,7 +226,7 @@ function App() {
                   onNavigate={navigateTo} 
                   wishlistItems={wishlistItems}
                   onToggleWishlist={handleToggleWishlist}
-                  initialFilters={activeFilters}
+                  filters={activeFilters}
                   onFiltersChange={setActiveFilters}
                 />;
       case 'wishlist':
@@ -261,7 +263,7 @@ function App() {
   };
 
   return (
-    <div className="bg-white dark:bg-[#121212] text-black dark:text-white font-sans">
+    <div className="bg-gray-300 dark:bg-[#121212] text-gray-900 dark:text-white font-sans transition-colors duration-300">
       <Header 
         products={products}
         currentPage={currentPage}
@@ -279,15 +281,18 @@ function App() {
       <Footer onNavigate={navigateTo}/>
       
       {/* WhatsApp Button */}
-      <div className="fixed bottom-6 right-6 z-50">
+      {/* Positioned at bottom-24 (approx 96px) - Safe zone for all devices */}
+      <div className="fixed bottom-24 right-4 md:right-6 z-[100] group">
         <a 
           href="https://wa.me/5521985516518?text=Olá!%20Gostaria%20de%20saber%20mais%20sobre%20os%20produtos."
           target="_blank"
           rel="noopener noreferrer"
-          className="bg-green-500 hover:bg-green-600 text-white rounded-full p-4 shadow-lg transition-transform duration-300 hover:scale-110 inline-block"
+          className="block transition-transform duration-300 group-hover:scale-110"
           aria-label="Contact us on WhatsApp"
         >
-          <WhatsAppIcon className="w-8 h-8" />
+          <div className="w-14 h-14 rounded-full drop-shadow-lg flex items-center justify-center">
+             <WhatsAppIcon className="w-full h-full" />
+          </div>
         </a>
       </div>
     </div>

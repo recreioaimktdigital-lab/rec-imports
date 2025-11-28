@@ -1,3 +1,4 @@
+
 import React from 'react';
 // FIX: Corrected import path for Product type.
 import { Product } from '../data/products';
@@ -17,10 +18,13 @@ const FeaturedProducts: React.FC<FeaturedProductsProps> = ({ products, onNavigat
   };
   
   return (
-    <section className="py-12 md:py-20 bg-gray-100 dark:bg-[#181818]">
+    <section className="py-12 md:py-20 bg-gray-300 dark:bg-[#181818]">
       <div className="container mx-auto px-4">
         <div className="text-center mb-8 md:mb-12">
-            <h2 className="text-4xl md:text-6xl font-display uppercase text-brand-yellow">
+            <h2 
+              className="text-4xl md:text-6xl font-display uppercase text-brand-yellow"
+              style={{ textShadow: '3px 3px 2px #1F2937' }}
+            >
             Produtos em Destaque
             </h2>
         </div>
@@ -51,7 +55,7 @@ const FeaturedProducts: React.FC<FeaturedProductsProps> = ({ products, onNavigat
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex flex-col items-center justify-end p-8 text-center text-white">
                   <h3 className="text-3xl font-bold uppercase">{product.name}</h3>
                   <p>{product.desc}</p>
-                  <div className="mt-4 bg-white text-black font-semibold py-2 px-6 rounded-full group-hover:bg-brand-yellow transition-colors duration-300">
+                  <div className="mt-4 bg-white text-black font-semibold py-2 px-6 rounded-full hover:bg-brand-yellow transition-colors duration-300">
                     Compre Agora
                   </div>
                 </div>
