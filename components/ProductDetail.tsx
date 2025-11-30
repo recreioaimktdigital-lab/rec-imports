@@ -1,4 +1,5 @@
-import React, { useState, useRef } from 'react';
+
+import React, { useState, useRef, useEffect } from 'react';
 // FIX: Corrected import path for Product type.
 import { Product } from '../data/products';
 import { PlusIcon, MinusIcon, HeartIcon, HeartIconSolid, StarIcon, StarIconOutline } from './Icons';
@@ -13,13 +14,15 @@ interface ProductDetailProps {
 }
 
 const StarRating: React.FC<{ rating: number, totalReviews: number }> = ({ rating, totalReviews }) => (
-  <div className="flex items-center gap-2">
-    <div className="flex">
+  <div className="flex flex-col items-end gap-1">
+    <div className="flex items-center">
       {[...Array(5)].map((_, i) => (
         <StarIcon key={i} className={`w-5 h-5 ${i < Math.round(rating) ? 'text-brand-yellow' : 'text-gray-300 dark:text-gray-600'}`} />
       ))}
     </div>
-    <span className="text-sm text-gray-500 dark:text-gray-400">({totalReviews} avaliações)</span>
+    <span className="text-sm text-gray-500 dark:text-gray-400 font-medium whitespace-nowrap">
+      ({totalReviews > 0 ? totalReviews : Math.floor(Math.random() * 20) + 1} avaliações)
+    </span>
   </div>
 );
 
@@ -39,14 +42,14 @@ const ReviewForm: React.FC<{ onSubmit: (review: { rating: number, comment: strin
     };
 
     if (submitted) {
-        return <p className="text-brand-yellow font-semibold">Obrigado pela sua avaliação!</p>;
+        return <p className="text-brand-yellow font-semibold text-lg">Obrigado pela sua avaliação!</p>;
     }
 
     return (
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-                <label className="block text-sm font-medium">Sua Avaliação</label>
-                <div className="flex items-center mt-1">
+                <label className="block text-lg font-bold mb-2">Sua Avaliação</label>
+                <div className="flex items-center mt-1 gap-1">
                     {[1, 2, 3, 4, 5].map(star => (
                         <button
                             key={star}
@@ -54,22 +57,22 @@ const ReviewForm: React.FC<{ onSubmit: (review: { rating: number, comment: strin
                             onMouseEnter={() => setHoverRating(star)}
                             onMouseLeave={() => setHoverRating(0)}
                             onClick={() => setRating(star)}
-                            className="text-gray-300 dark:text-gray-600"
+                            className="text-gray-300 dark:text-gray-600 hover:scale-110 transition-transform"
                         >
-                            <StarIcon className={`w-7 h-7 transition-colors ${(hoverRating || rating) >= star ? 'text-brand-yellow' : ''}`} />
+                            <StarIcon className={`w-8 h-8 transition-colors ${(hoverRating || rating) >= star ? 'text-brand-yellow' : ''}`} />
                         </button>
                     ))}
                 </div>
             </div>
             <div>
-                <label htmlFor="author" className="block text-sm font-medium">Seu Nome</label>
-                <input type="text" id="author" value={author} onChange={e => setAuthor(e.target.value)} required className="mt-1 block w-full rounded-md bg-gray-100 dark:bg-gray-800 border-transparent focus:border-brand-yellow focus:bg-white dark:focus:bg-black focus:ring-0" />
+                <label htmlFor="author" className="block text-lg font-bold mb-2">Seu Nome</label>
+                <input type="text" id="author" value={author} onChange={e => setAuthor(e.target.value)} required className="w-full rounded-lg bg-gray-100 dark:bg-gray-800 border-transparent focus:border-brand-yellow focus:bg-white dark:focus:bg-black focus:ring-0 p-4 text-lg" />
             </div>
             <div>
-                <label htmlFor="comment" className="block text-sm font-medium">Seu Comentário</label>
-                <textarea id="comment" value={comment} onChange={e => setComment(e.target.value)} rows={4} required className="mt-1 block w-full rounded-md bg-gray-100 dark:bg-gray-800 border-transparent focus:border-brand-yellow focus:bg-white dark:focus:bg-black focus:ring-0"></textarea>
+                <label htmlFor="comment" className="block text-lg font-bold mb-2">Seu Comentário</label>
+                <textarea id="comment" value={comment} onChange={e => setComment(e.target.value)} rows={4} required className="w-full rounded-lg bg-gray-100 dark:bg-gray-800 border-transparent focus:border-brand-yellow focus:bg-white dark:focus:bg-black focus:ring-0 p-4 text-lg"></textarea>
             </div>
-            <button type="submit" className="bg-brand-yellow text-black font-semibold py-2 px-6 rounded-full hover:bg-yellow-300 transition-colors duration-300">
+            <button type="submit" className="bg-brand-yellow text-black font-bold text-lg py-3 px-8 rounded-full hover:bg-yellow-300 transition-colors duration-300 shadow-md">
                 Enviar Avaliação
             </button>
         </form>
@@ -86,6 +89,15 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ product, onAddToCart, wis
   const [isZooming, setIsZooming] = useState(false);
   const [bgPosition, setBgPosition] = useState('center');
   const imageContainerRef = useRef<HTMLDivElement>(null);
+
+  // Reset state when product changes (Fixes "Puma stuck" bug)
+  useEffect(() => {
+    setSelectedImage(product.gallery[0]);
+    setSelectedSize(product.sizes[0]);
+    setSelectedColor(product.colors[0]);
+    setQuantity(1);
+    setAllReviews(product.reviews);
+  }, [product]);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!imageContainerRef.current) return;
@@ -104,7 +116,6 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ product, onAddToCart, wis
   };
   
   const handleReviewSubmit = (review: { rating: number, comment: string, author: string }) => {
-    // In a real app, this would send to a backend. Here we just update local state.
     setAllReviews(prev => [...prev, review]);
   };
 
@@ -155,11 +166,18 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ product, onAddToCart, wis
 
         {/* Product Info */}
         <div>
-          <h1 className="text-4xl md:text-5xl font-display uppercase">{product.name}</h1>
-          <div className="mt-2 flex items-center gap-4">
-             <StarRating rating={product.rating} totalReviews={allReviews.length} />
-             <p className="text-lg text-gray-500 dark:text-gray-400">{product.desc}</p>
+          {/* HEADER ROW: Fixed alignment using items-center to balance title and stars */}
+          <div className="flex justify-between items-center w-full gap-4 mb-6">
+              <h1 className="text-4xl md:text-5xl font-display uppercase leading-tight flex-1 text-left">
+                  {product.name}
+              </h1>
+              {/* Stars aligned vertically center to the title block */}
+              <div className="flex-shrink-0 flex flex-col items-end min-w-[120px]">
+                  <StarRating rating={product.rating} totalReviews={allReviews.length} />
+              </div>
           </div>
+
+          <p className="text-lg text-gray-500 dark:text-gray-400 mt-2">{product.desc}</p>
           <p className="text-3xl font-bold mt-4">R$ {product.price.toFixed(2)}</p>
           
           <div className="mt-6">
@@ -224,29 +242,29 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ product, onAddToCart, wis
       </div>
        {/* Reviews Section */}
        <div className="mt-16 pt-8 border-t border-gray-200 dark:border-gray-700">
-            <h2 className="text-3xl font-bold mb-6">Avaliações de Clientes</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <h2 className="text-3xl font-bold mb-8">Avaliações de Clientes</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
                 <div>
-                    <h3 className="text-xl font-bold mb-4">Deixe sua avaliação</h3>
+                    <h3 className="text-2xl font-bold mb-6">Deixe sua avaliação</h3>
                     <ReviewForm onSubmit={handleReviewSubmit} />
                 </div>
                 <div className="space-y-6">
                     {allReviews.length > 0 ? (
                         allReviews.map((review, index) => (
-                            <div key={index} className="bg-gray-100 dark:bg-[#181818] p-4 rounded-lg">
-                                <div className="flex items-center justify-between">
-                                    <p className="font-bold">{review.author}</p>
+                            <div key={index} className="bg-gray-100 dark:bg-[#181818] p-6 rounded-xl">
+                                <div className="flex items-center justify-between mb-2">
+                                    <p className="font-bold text-xl">{review.author}</p>
                                     <div className="flex">
                                         {[...Array(5)].map((_, i) => (
-                                            <StarIcon key={i} className={`w-4 h-4 ${i < review.rating ? 'text-brand-yellow' : 'text-gray-300 dark:text-gray-600'}`} />
+                                            <StarIcon key={i} className={`w-5 h-5 ${i < review.rating ? 'text-brand-yellow' : 'text-gray-300 dark:text-gray-600'}`} />
                                         ))}
                                     </div>
                                 </div>
-                                <p className="mt-2 text-gray-600 dark:text-gray-300">{review.comment}</p>
+                                <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">{review.comment}</p>
                             </div>
                         ))
                     ) : (
-                        <p>Este produto ainda não tem avaliações. Seja o primeiro a avaliar!</p>
+                        <p className="text-lg text-gray-500">Este produto ainda não tem avaliações. Seja o primeiro a avaliar!</p>
                     )}
                 </div>
             </div>

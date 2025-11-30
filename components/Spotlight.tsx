@@ -53,7 +53,7 @@ const Spotlight: React.FC<SpotlightProps> = ({ onNavigate }) => {
   };
 
   return (
-    <section className="py-12 md:py-20 bg-gray-300 dark:bg-[#121212]">
+    <section className="py-12 md:py-20 bg-gray-200 dark:bg-[#121212]">
       <div className="container mx-auto px-4 text-center">
         <h2 
           className="text-4xl md:text-6xl font-display uppercase text-brand-yellow"
@@ -61,7 +61,8 @@ const Spotlight: React.FC<SpotlightProps> = ({ onNavigate }) => {
         >
           Super Ofertas
         </h2>
-        <p className="mt-2 md:mt-4 text-lg text-gray-700 dark:text-gray-300 max-w-3xl mx-auto">
+        {/* Increased font size */}
+        <p className="mt-2 md:mt-4 text-xl md:text-2xl text-gray-700 dark:text-gray-300 max-w-4xl mx-auto">
           Aproveite nossos descontos incríveis em produtos selecionados. Corra, é por tempo limitado!
         </p>
         

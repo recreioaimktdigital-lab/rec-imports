@@ -31,8 +31,9 @@ const VideoAction: React.FC<VideoActionProps> = ({ onOpenVideo }) => {
         >
           Assista à Ação
         </h2>
-        <p className="mt-2 md:mt-4 text-lg text-gray-700 dark:text-gray-300 max-w-3xl mx-auto">
-          Sinta a intensidade, paixão e dedicação de atletas superando seus limites. (Vídeos com áudio habilitado)
+        {/* Increased font size */}
+        <p className="mt-2 md:mt-4 text-xl md:text-2xl text-gray-700 dark:text-gray-300 max-w-4xl mx-auto">
+          Sinta a intensidade, paixão e dedicação de atletas superando seus limites.
         </p>
 
         <div
@@ -46,7 +47,8 @@ const VideoAction: React.FC<VideoActionProps> = ({ onOpenVideo }) => {
             </div>
              <div className="absolute bottom-8 left-8 text-left text-white">
                   <h3 className="text-3xl font-bold group-hover:text-brand-yellow transition-colors">Excelência Atlética</h3>
-                  <p>Veja como os campeões treinam e competem no mais alto nível.</p>
+                  {/* Increased font size */}
+                  <p className="text-xl mt-2 drop-shadow-md">Veja como os campeões treinam e competem no mais alto nível.</p>
               </div>
         </div>
 
@@ -61,7 +63,8 @@ const VideoAction: React.FC<VideoActionProps> = ({ onOpenVideo }) => {
                 <div className="absolute inset-0 bg-black bg-opacity-40 flex flex-col items-center justify-center p-4 text-white">
                   {/* Updated: White by default, Brand Yellow on hover with scale animation */}
                   <PlayCircleIcon className="w-16 h-16 text-white group-hover:text-brand-yellow transition-all duration-300 transform group-hover:scale-125 drop-shadow-lg" />
-                  <p className="mt-2 font-semibold text-white group-hover:text-brand-yellow transition-colors duration-300">{item.title}</p>
+                  {/* Increased font size */}
+                  <p className="mt-2 text-xl font-bold text-white group-hover:text-brand-yellow transition-colors duration-300 drop-shadow-md">{item.title}</p>
                 </div>
             </div>
           ))}

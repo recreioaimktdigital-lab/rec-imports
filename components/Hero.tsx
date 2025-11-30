@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef } from 'react';
 import { ArrowLeftIcon, ArrowRightIcon } from './Icons';
 import { Product, Filters } from '../data/products';
@@ -139,12 +140,13 @@ const Hero: React.FC<HeroProps> = ({ onNavigate }) => {
         <h1 className="text-5xl md:text-7xl lg:text-8xl font-display uppercase tracking-wider text-white">
           {slidesData[currentSlide].title}
         </h1>
-        <p className="mt-2 text-lg font-semibold text-gray-200 max-w-2xl">
+        {/* Updated Font Size: text-xl (mobile) / text-2xl (desktop) */}
+        <p className="mt-4 text-xl md:text-2xl font-semibold text-gray-100 max-w-3xl drop-shadow-md">
           {slidesData[currentSlide].subtitle}
         </p>
         <button
           onClick={() => slidesData[currentSlide].onButtonClick(onNavigate)}
-          className="mt-6 bg-brand-yellow text-black font-semibold py-3 px-8 rounded-full hover:bg-yellow-300 transition-colors duration-300"
+          className="mt-8 bg-brand-yellow text-black font-semibold py-4 px-10 rounded-full hover:bg-yellow-300 transition-colors duration-300 text-lg shadow-lg hover:scale-105 transform"
         >
           {slidesData[currentSlide].buttonText}
         </button>
@@ -152,7 +154,7 @@ const Hero: React.FC<HeroProps> = ({ onNavigate }) => {
       
       {/* Navigation Controls */}
       <div className="absolute z-20 bottom-8 md:bottom-12 left-1/2 -translate-x-1/2 w-full max-w-6xl px-4 flex justify-between items-center">
-        <button onClick={goToPrev} className="p-3 rounded-full bg-black/30 hover:bg-black/60 transition-colors">
+        <button onClick={goToPrev} className="p-3 rounded-full bg-black/30 hover:bg-black/60 transition-colors backdrop-blur-sm border border-white/10">
             <ArrowLeftIcon className="w-6 h-6"/>
         </button>
         {/* Progress Bars */}
@@ -173,7 +175,7 @@ const Hero: React.FC<HeroProps> = ({ onNavigate }) => {
                 );
             })}
         </div>
-        <button onClick={goToNext} className="p-3 rounded-full bg-black/30 hover:bg-black/60 transition-colors">
+        <button onClick={goToNext} className="p-3 rounded-full bg-black/30 hover:bg-black/60 transition-colors backdrop-blur-sm border border-white/10">
             <ArrowRightIcon className="w-6 h-6"/>
         </button>
       </div>

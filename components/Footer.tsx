@@ -38,7 +38,7 @@ const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                {/* Updated Height: h-6 for mobile, h-7 for tablet, h-9 desktop */}
                <LogoIcon className="h-6 md:h-7 lg:h-9 w-auto text-white" />
             </button>
-            <p className="text-base text-gray-400 dark:text-gray-400 max-w-sm leading-relaxed">
+            <p className="text-lg text-gray-400 dark:text-gray-400 max-w-sm leading-relaxed">
               A melhor seleção de artigos esportivos e lifestyle para você superar seus limites. Qualidade, estilo e performance em um só lugar.
             </p>
             
@@ -100,7 +100,7 @@ const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                           else if (link.filter) onNavigate('shop', undefined, link.filter);
                         }} 
                         disabled={link.disabled}
-                        className="text-left text-base text-gray-400 dark:text-gray-400 hover:text-brand-yellow dark:hover:text-brand-yellow transition-colors disabled:cursor-not-allowed disabled:opacity-50 hover:translate-x-1 duration-200"
+                        className="text-left text-lg text-gray-400 dark:text-gray-400 hover:text-brand-yellow dark:hover:text-brand-yellow transition-colors disabled:cursor-not-allowed disabled:opacity-50 hover:translate-x-1 duration-200"
                       >
                         {link.name}
                       </button>
@@ -113,7 +113,7 @@ const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
         </div>
 
         {/* Bottom Section */}
-        <div className="mt-16 pt-8 border-t border-gray-700 dark:border-gray-800 flex flex-col-reverse md:flex-row justify-between items-center text-base gap-6">
+        <div className="mt-16 pt-8 border-t border-gray-700 dark:border-gray-800 flex flex-col-reverse md:flex-row justify-between items-center text-lg gap-6">
             <p className="text-gray-500 dark:text-gray-500 text-center md:text-left">
               &copy; {new Date().getFullYear()} Recreio Imports. Todos os direitos reservados.
             </p>

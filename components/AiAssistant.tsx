@@ -51,14 +51,21 @@ const AiAssistant: React.FC<AiAssistantProps> = ({ products, onNavigate }) => {
   }, [messages]);
 
   useEffect(() => {
-    const ai = new GoogleGenAI({ apiKey: process.env.API_KEY as string });
-    chat.current = ai.chats.create({
-      model: 'gemini-2.5-flash',
-      config: {
-        systemInstruction: "Você é um assistente de compras amigável e experiente da Recreio Imports, uma loja de e-commerce especializada em roupas e calçados esportivos. Seja prestativo, conciso e incentive os usuários a explorar os produtos. Use a função `searchProducts` sempre que um usuário pedir para encontrar um produto. Responda em português brasileiro.",
-        tools: [{ functionDeclarations: [searchProductsFunctionDeclaration] }],
-      },
-    });
+    // Uses standard process.env to avoid TS errors with import.meta
+    const apiKey = process.env.API_KEY;
+
+    if (apiKey) {
+        const ai = new GoogleGenAI({ apiKey: apiKey });
+        chat.current = ai.chats.create({
+        model: 'gemini-2.5-flash',
+        config: {
+            systemInstruction: "Você é um assistente de compras amigável e experiente da Recreio Imports, uma loja de e-commerce especializada em roupas e calçados esportivos. Seja prestativo, conciso e incentive os usuários a explorar os produtos. Use a função `searchProducts` sempre que um usuário pedir para encontrar um produto. Responda em português brasileiro.",
+            tools: [{ functionDeclarations: [searchProductsFunctionDeclaration] }],
+        },
+        });
+    } else {
+        console.warn("API Key is missing. AI features will not work.");
+    }
   }, []);
 
   const performProductSearch = (args: { [key: string]: any }): Product[] => {
@@ -108,13 +115,13 @@ const AiAssistant: React.FC<AiAssistantProps> = ({ products, onNavigate }) => {
         
         const aiMessage: Message = { 
             sender: 'ai', 
-            text: response.text,
+            text: response.text || "Desculpe, não consegui encontrar uma resposta.",
             products: foundProducts
         };
         setMessages(prev => [...prev, aiMessage]);
 
       } else {
-        const aiMessage: Message = { sender: 'ai', text: response.text };
+        const aiMessage: Message = { sender: 'ai', text: response.text || "Desculpe, não entendi." };
         setMessages(prev => [...prev, aiMessage]);
       }
 

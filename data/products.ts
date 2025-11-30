@@ -958,5 +958,137 @@ export const products: Product[] = [
     colors: ["Branco", "Azul"],
     rating: 4.5,
     reviews: []
+  },
+  {
+    id: 42,
+    name: "Cotoveleira Elástica",
+    category: "Fisio e Ortopédico",
+    brand: "Hidrolight",
+    gender: "Unissex",
+    style: "Ortopédico",
+    image: "https://images.pexels.com/photos/7298642/pexels-photo-7298642.jpeg?auto=compress&cs=tinysrgb&w=800",
+    gallery: [
+        "https://images.pexels.com/photos/7298642/pexels-photo-7298642.jpeg?auto=compress&cs=tinysrgb&w=800",
+        "https://images.pexels.com/photos/4164761/pexels-photo-4164761.jpeg?auto=compress&cs=tinysrgb&w=800",
+        "https://images.pexels.com/photos/7298418/pexels-photo-7298418.jpeg?auto=compress&cs=tinysrgb&w=800"
+    ],
+    desc: "Suporte e prevenção de lesões.",
+    price: 35.90,
+    stock: 60,
+    longDescription: "Cotoveleira elástica confortável para proteção durante a prática esportiva ou recuperação de tendinites.",
+    sizes: ["P", "M", "G"],
+    colors: ["Preto"],
+    rating: 4.4,
+    reviews: []
+  },
+  {
+    id: 43,
+    name: "Bolsa de Praia Impermeável",
+    category: "Moda Praia",
+    brand: "Recreio Beach",
+    gender: "Feminino",
+    style: "Casual",
+    image: "https://images.pexels.com/photos/1154619/pexels-photo-1154619.jpeg?auto=compress&cs=tinysrgb&w=800",
+    gallery: [
+        "https://images.pexels.com/photos/1154619/pexels-photo-1154619.jpeg?auto=compress&cs=tinysrgb&w=800",
+        "https://images.pexels.com/photos/3358966/pexels-photo-3358966.jpeg?auto=compress&cs=tinysrgb&w=800",
+        "https://images.pexels.com/photos/3306990/pexels-photo-3306990.jpeg?auto=compress&cs=tinysrgb&w=800"
+    ],
+    desc: "Espaçosa e resistente para o verão.",
+    price: 119.90,
+    stock: 30,
+    longDescription: "Bolsa grande com forro impermeável, ideal para levar toalhas, protetor solar e acessórios para a praia ou piscina.",
+    sizes: ["Único"],
+    colors: ["Transparente/Neon", "Estampada"],
+    rating: 4.8,
+    reviews: []
+  },
+  {
+    id: 44,
+    name: "Camiseta Térmica Manga Longa",
+    category: "Roupas",
+    brand: "Nike",
+    gender: "Masculino",
+    style: "Performance",
+    image: "https://images.pexels.com/photos/4167544/pexels-photo-4167544.jpeg?auto=compress&cs=tinysrgb&w=800",
+    gallery: [
+        "https://images.pexels.com/photos/4167544/pexels-photo-4167544.jpeg?auto=compress&cs=tinysrgb&w=800",
+        "https://images.pexels.com/photos/3763879/pexels-photo-3763879.jpeg?auto=compress&cs=tinysrgb&w=800",
+        "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=800"
+    ],
+    desc: "Mantém a temperatura corporal ideal.",
+    price: 129.90,
+    stock: 20,
+    longDescription: "Camiseta térmica ideal para treinos em dias frios. Tecido que mantém o calor e afasta o suor.",
+    sizes: ["P", "M", "G", "GG"],
+    colors: ["Preto", "Branco"],
+    rating: 4.7,
+    reviews: []
+  },
+  {
+    id: 45,
+    name: "Shorts de Compressão Techfit",
+    category: "Roupas",
+    brand: "Adidas",
+    gender: "Masculino",
+    style: "Performance",
+    image: "https://images.pexels.com/photos/4761785/pexels-photo-4761785.jpeg?auto=compress&cs=tinysrgb&w=800",
+    gallery: [
+        "https://images.pexels.com/photos/4761785/pexels-photo-4761785.jpeg?auto=compress&cs=tinysrgb&w=800",
+        "https://images.pexels.com/photos/16335133/pexels-photo-16335133.jpeg?auto=compress&cs=tinysrgb&w=800",
+        "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=800"
+    ],
+    desc: "Suporte muscular para treinos intensos.",
+    price: 119.90,
+    stock: 25,
+    longDescription: "Shorts de compressão que oferece suporte aos músculos da coxa, reduzindo a vibração muscular e a fadiga.",
+    sizes: ["P", "M", "G"],
+    colors: ["Preto", "Azul"],
+    rating: 4.8,
+    reviews: []
+  },
+  {
+    id: 46,
+    name: "Tênis Kids Flex Runner",
+    category: "Tênis",
+    brand: "Nike",
+    gender: "Kids",
+    style: "Corrida",
+    image: "https://images.pexels.com/photos/1619690/pexels-photo-1619690.jpeg?auto=compress&cs=tinysrgb&w=800",
+    gallery: [
+        "https://images.pexels.com/photos/1619690/pexels-photo-1619690.jpeg?auto=compress&cs=tinysrgb&w=800",
+        "https://images.pexels.com/photos/1598505/pexels-photo-1598505.jpeg?auto=compress&cs=tinysrgb&w=800",
+        "https://images.pexels.com/photos/2529148/pexels-photo-2529148.jpeg?auto=compress&cs=tinysrgb&w=800"
+    ],
+    desc: "Flexibilidade para brincar o dia todo.",
+    price: 249.90,
+    stock: 15,
+    longDescription: "Tênis sem cadarço, fácil de calçar e tirar. Solado flexível que acompanha o movimento natural dos pés.",
+    sizes: ["28", "29", "30", "31", "32"],
+    colors: ["Preto/Branco", "Azul"],
+    rating: 4.8,
+    reviews: []
+  },
+  {
+    id: 47,
+    name: "Conjunto Moletom Infantil",
+    category: "Roupas",
+    brand: "Puma",
+    gender: "Kids",
+    style: "Casual",
+    image: "https://images.pexels.com/photos/1620760/pexels-photo-1620760.jpeg?auto=compress&cs=tinysrgb&w=800",
+    gallery: [
+        "https://images.pexels.com/photos/1620760/pexels-photo-1620760.jpeg?auto=compress&cs=tinysrgb&w=800",
+        "https://images.pexels.com/photos/3662952/pexels-photo-3662952.jpeg?auto=compress&cs=tinysrgb&w=800",
+        "https://images.pexels.com/photos/4066296/pexels-photo-4066296.jpeg?auto=compress&cs=tinysrgb&w=800"
+    ],
+    desc: "Conforto e estilo para os pequenos.",
+    price: 189.90,
+    stock: 20,
+    longDescription: "Conjunto de moletom macio e quentinho. Perfeito para os dias mais frios com muito estilo.",
+    sizes: ["4", "6", "8", "10"],
+    colors: ["Cinza/Rosa", "Azul/Preto"],
+    rating: 4.7,
+    reviews: []
   }
 ];

@@ -181,17 +181,21 @@ const Header: React.FC<HeaderProps> = ({ products, currentPage, onNavigate, them
                   />
                 </div>
                 {isSearchFocused && searchResults.length > 0 && (
-                  <div className="absolute top-full mt-2 w-full bg-white dark:bg-gray-900 rounded-xl shadow-2xl overflow-hidden border border-gray-200 dark:border-gray-700 animate-fade-in z-[60]">
+                  <div className="absolute top-full mt-2 w-full bg-white dark:bg-gray-900 rounded-xl shadow-2xl overflow-hidden border border-gray-200 dark:border-gray-700 animate-fade-in z-[100]">
                     <ul>
                       {searchResults.map(product => (
                         <li key={product.id}>
-                          <button onClick={() => handleResultClick(product)} className="w-full flex items-center gap-4 p-3 text-left hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors border-b border-gray-100 dark:border-gray-800 last:border-0">
-                            <img src={product.image} alt={product.name} className="w-12 h-12 object-cover rounded-md flex-shrink-0" />
-                            <div className="flex-1 min-w-0">
-                              <p className="font-semibold text-sm text-black dark:text-white truncate">{product.name}</p>
-                              <p className="text-xs text-gray-500 dark:text-gray-400 truncate">{product.category}</p>
+                          <button onClick={() => handleResultClick(product)} className="w-full flex items-center justify-between gap-4 p-3 text-left hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors border-b border-gray-100 dark:border-gray-800 last:border-0">
+                            <div className="flex items-center gap-3 flex-1 min-w-0 overflow-hidden">
+                                <img src={product.image} alt={product.name} className="w-12 h-12 object-cover rounded-md flex-shrink-0" />
+                                <div className="flex flex-col min-w-0 flex-1">
+                                    <p className="font-semibold text-sm text-black dark:text-white truncate pr-2">{product.name}</p>
+                                    <p className="text-xs text-gray-500 dark:text-gray-400 truncate">{product.category}</p>
+                                </div>
                             </div>
-                            <span className="text-sm font-bold text-brand-yellow whitespace-nowrap flex-shrink-0 ml-2">R$ {product.price.toFixed(2)}</span>
+                            <div className="flex-shrink-0 ml-2">
+                                <span className="text-sm font-bold text-brand-yellow whitespace-nowrap block text-right">R$ {product.price.toFixed(2)}</span>
+                            </div>
                           </button>
                         </li>
                       ))}
@@ -202,9 +206,27 @@ const Header: React.FC<HeaderProps> = ({ products, currentPage, onNavigate, them
 
               {/* Navigation */}
               <nav className="flex items-center space-x-3 lg:space-x-6 flex-shrink-0 z-20">
-                <button onClick={() => onNavigate('shop')} className="text-sm lg:text-base font-bold uppercase tracking-wide text-white dark:text-gray-300 hover:text-brand-yellow dark:hover:text-brand-yellow transition-colors whitespace-nowrap">Loja</button>
-                <button onClick={() => onNavigate('help')} className="text-sm lg:text-base font-bold uppercase tracking-wide text-white dark:text-gray-300 hover:text-brand-yellow dark:hover:text-brand-yellow transition-colors whitespace-nowrap">Ajuda</button>
-                <button onClick={() => onNavigate('login')} className="text-sm lg:text-base font-bold uppercase tracking-wide text-white dark:text-gray-300 hover:text-brand-yellow dark:hover:text-brand-yellow transition-colors whitespace-nowrap">Entrar</button>
+                <button 
+                    onClick={() => onNavigate('shop')} 
+                    className="text-sm lg:text-base font-semibold uppercase tracking-wide text-white dark:text-gray-300 hover:text-brand-yellow dark:hover:text-brand-yellow transition-colors whitespace-nowrap drop-shadow-md"
+                    style={{ textShadow: '1px 1px 2px rgba(31, 41, 55, 0.8)' }}
+                >
+                    Loja
+                </button>
+                <button 
+                    onClick={() => onNavigate('help')} 
+                    className="text-sm lg:text-base font-semibold uppercase tracking-wide text-white dark:text-gray-300 hover:text-brand-yellow dark:hover:text-brand-yellow transition-colors whitespace-nowrap drop-shadow-md"
+                    style={{ textShadow: '1px 1px 2px rgba(31, 41, 55, 0.8)' }}
+                >
+                    Ajuda
+                </button>
+                <button 
+                    onClick={() => onNavigate('login')} 
+                    className="text-sm lg:text-base font-semibold uppercase tracking-wide text-white dark:text-gray-300 hover:text-brand-yellow dark:hover:text-brand-yellow transition-colors whitespace-nowrap drop-shadow-md"
+                    style={{ textShadow: '1px 1px 2px rgba(31, 41, 55, 0.8)' }}
+                >
+                    Entrar
+                </button>
                 <div className="h-6 w-px bg-gray-600 dark:bg-gray-700 mx-2"></div>
                 <div className="flex items-center space-x-2 lg:space-x-5">
                    <button onClick={onToggleTheme} className="text-white dark:text-gray-300 hover:text-brand-yellow dark:hover:text-brand-yellow transition-colors">

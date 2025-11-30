@@ -20,6 +20,7 @@ import Login from './components/Login';
 import VideoModal from './components/VideoModal';
 import { Product, CartItem, Order, Filters, products } from './data/products';
 import LeadCapture from './components/LeadCapture';
+import MusicPlayer from './components/MusicPlayer';
 
 interface ToastProps {
   message: string;
@@ -280,6 +281,9 @@ function App() {
       {isVideoModalOpen && <VideoModal key={currentVideoUrl} videoUrl={currentVideoUrl} onClose={closeVideoModal} />}
       <Footer onNavigate={navigateTo}/>
       
+      {/* Music Player */}
+      <MusicPlayer />
+
       {/* WhatsApp Button */}
       {/* Positioned at bottom-24 (approx 96px) - Safe zone for all devices */}
       <div className="fixed bottom-24 right-4 md:right-6 z-[100] group">
