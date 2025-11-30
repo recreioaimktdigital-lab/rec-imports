@@ -5,67 +5,83 @@ import { MusicNoteIcon, MusicOffIcon, ArrowRightIcon } from './Icons';
 const MusicPlayer: React.FC = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
-  const [showTooltip, setShowTooltip] = useState(false);
+  const [isInfoVisible, setIsInfoVisible] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
+  
   const audioRef = useRef<HTMLAudioElement>(null);
   const clickTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const infoTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Playlist com Links de Alta Disponibilidade (Google Storage / Samples)
-  // Garantia de funcionamento.
+  // Playlist com Links MP3 Diretos e Estáveis (CDN Pixabay)
+  // Estilos selecionados para combinar com a vibe pedida (Snoop, Drake, Rock, Pop)
   const playlist = [
     {
-      title: "West Coast Beat (Snoop Vibe)",
-      url: "https://storage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4", // Audio sample wrapper
+      title: "West Coast Vibe (Snoop Style)",
+      url: "https://cdn.pixabay.com/audio/2022/05/27/audio_1808fbf07a.mp3", // Old School Hip Hop
     },
     {
-      title: "Trap Mode (Drake Vibe)",
-      url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+      title: "Trap Beat (Drake Style)",
+      url: "https://cdn.pixabay.com/audio/2022/03/15/audio_c8c8a73467.mp3", // Modern Trap
     },
     {
-      title: "High Energy (Eminem Vibe)",
-      url: "https://storage.googleapis.com/gtv-videos-bucket/sample/Volcano.mp4",
+      title: "Hard Flow (Eminem Vibe)",
+      url: "https://cdn.pixabay.com/audio/2023/09/06/audio_2e23205396.mp3", // Aggressive Phonk/Rap
     },
     {
-      title: "Rock Classic (Ramones Vibe)",
-      url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-15.mp3",
+      title: "Punk Rock (Ramones Vibe)",
+      url: "https://cdn.pixabay.com/audio/2022/01/18/audio_d0a13f69d2.mp3", // Fast Rock
     },
     {
-      title: "Alternative (Midnight Oil Vibe)",
-      url: "https://storage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4",
+      title: "Alt Rock (Midnight Oil Vibe)",
+      url: "https://cdn.pixabay.com/audio/2020/09/14/audio_a0a033282b.mp3", // Indie Rock
     },
     {
-      title: "Chill Acoustic (Ben Harper Vibe)",
-      url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3",
+      title: "Acoustic Chill (Ben Harper Vibe)",
+      url: "https://cdn.pixabay.com/audio/2022/08/02/audio_884fe92c21.mp3", // Folk/Guitar
     },
     {
-      title: "Party Pop (Black Eyed Peas Vibe)",
-      url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-9.mp3",
+      title: "Pop Dance (Black Eyed Peas Vibe)",
+      url: "https://cdn.pixabay.com/audio/2023/04/17/audio_f5e6709772.mp3", // Upbeat Pop
     },
     {
-      title: "Lo-Fi Shop",
-      url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3",
+      title: "Shopping Lounge",
+      url: "https://cdn.pixabay.com/audio/2022/11/22/audio_febc508520.mp3", // Lo-Fi
     },
     {
-      title: "Deep House Style",
-      url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
+      title: "Deep House",
+      url: "https://cdn.pixabay.com/audio/2022/03/24/audio_24e2358824.mp3", // House
     }
   ];
 
   const currentTrack = playlist[currentTrackIndex];
 
+  // Função para mostrar informações por 6 segundos
+  const showInfoTemporarily = () => {
+    setIsInfoVisible(true);
+    
+    if (infoTimeoutRef.current) {
+      clearTimeout(infoTimeoutRef.current);
+    }
+
+    infoTimeoutRef.current = setTimeout(() => {
+      setIsInfoVisible(false);
+    }, 6000); // 6 segundos exatos
+  };
+
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation();
 
     if (clickTimeoutRef.current) {
-      // Duplo Clique: Próxima
+      // --- CLIQUE DUPLO: Próxima Música ---
       clearTimeout(clickTimeoutRef.current);
       clickTimeoutRef.current = null;
       handleNextTrack();
     } else {
-      // Clique Único: Play/Pause (Delay reduzido para 200ms)
+      // --- CLIQUE ÚNICO: Tocar/Pausar ---
       clickTimeoutRef.current = setTimeout(() => {
         togglePlay();
         clickTimeoutRef.current = null;
-      }, 200);
+      }, 250);
     }
   };
 
@@ -73,11 +89,13 @@ const MusicPlayer: React.FC = () => {
     if (audioRef.current) {
       if (isPlaying) {
         audioRef.current.pause();
+        setIsInfoVisible(false); // Esconde ao pausar
       } else {
         const playPromise = audioRef.current.play();
         if (playPromise !== undefined) {
             playPromise.catch(e => console.error("Erro ao tocar:", e));
         }
+        showInfoTemporarily(); // Mostra info ao tocar
       }
       setIsPlaying(!isPlaying);
     }
@@ -87,7 +105,7 @@ const MusicPlayer: React.FC = () => {
     const nextIndex = (currentTrackIndex + 1) % playlist.length;
     setCurrentTrackIndex(nextIndex);
     setIsPlaying(true); 
-    // O useEffect cuidará de tocar a nova faixa
+    showInfoTemporarily(); // Mostra info ao trocar
   };
 
   useEffect(() => {
@@ -106,15 +124,19 @@ const MusicPlayer: React.FC = () => {
 
   useEffect(() => {
       if(audioRef.current) {
-          audioRef.current.volume = 0.6;
+          audioRef.current.volume = 0.5;
       }
+      return () => {
+        if (infoTimeoutRef.current) clearTimeout(infoTimeoutRef.current);
+        if (clickTimeoutRef.current) clearTimeout(clickTimeoutRef.current);
+      };
   }, []);
 
   return (
     <div 
-        className="fixed bottom-24 left-4 md:left-6 z-[90] group flex items-center gap-3"
-        onMouseEnter={() => setShowTooltip(true)}
-        onMouseLeave={() => setShowTooltip(false)}
+        className="fixed bottom-24 left-4 md:left-6 z-[90] group flex items-center"
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
     >
       <audio 
         ref={audioRef} 
@@ -123,26 +145,40 @@ const MusicPlayer: React.FC = () => {
         crossOrigin="anonymous"
       />
       
-      {/* Tooltip Simples */}
-      <div className={`transition-all duration-300 absolute left-16 top-2 bg-black text-white text-xs px-3 py-1 rounded whitespace-nowrap ${showTooltip || isPlaying ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
-        <span className="font-bold text-brand-yellow mr-1">♪</span> 
-        {isPlaying ? currentTrack.title : "Clique para Tocar"}
+      {/* Container de Informação da Música */}
+      <div 
+        className={`
+            absolute left-14 top-1/2 -translate-y-1/2 
+            bg-black/90 text-white text-xs px-4 py-2 rounded-lg 
+            whitespace-nowrap shadow-xl border border-gray-700
+            transition-all duration-500 ease-in-out
+            ${(isInfoVisible || isHovered) ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4 pointer-events-none'}
+        `}
+      >
+        <div className="flex flex-col">
+            <span className="font-bold text-brand-yellow text-[10px] uppercase tracking-wider">Tocando Agora</span>
+            <span className="font-medium">{currentTrack.title}</span>
+        </div>
+        {/* Seta decorativa */}
+        <div className="absolute left-[-6px] top-1/2 -translate-y-1/2 w-0 h-0 border-t-[6px] border-t-transparent border-r-[6px] border-r-black/90 border-b-[6px] border-b-transparent"></div>
       </div>
 
       <button
         onClick={handleClick}
-        className={`w-12 h-12 rounded-full flex items-center justify-center shadow-lg transition-all duration-200 border-2 
-          ${isPlaying 
-            ? 'bg-brand-yellow border-white scale-110' 
-            : 'bg-gray-900 border-gray-600 hover:scale-105'
-          }
+        className={`
+            w-12 h-12 rounded-full flex items-center justify-center 
+            shadow-[0_4px_14px_0_rgba(0,0,0,0.39)] transition-all duration-300 
+            ${isPlaying 
+                ? 'bg-brand-yellow scale-110 shadow-[0_0_15px_rgba(255,234,0,0.5)]' 
+                : 'bg-gray-900 hover:bg-gray-800'
+            }
         `}
-        title="1 clique: Tocar/Pausar | 2 cliques: Próxima"
+        aria-label="Controle de Música"
       >
         {isPlaying ? (
            <MusicNoteIcon className="w-6 h-6 text-black animate-pulse" />
         ) : (
-           <MusicOffIcon className="w-6 h-6 text-gray-400" />
+           <MusicOffIcon className="w-5 h-5 text-gray-400" />
         )}
       </button>
     </div>
