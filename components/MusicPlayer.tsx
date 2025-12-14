@@ -12,44 +12,43 @@ const MusicPlayer: React.FC = () => {
   const clickTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const infoTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Playlist com Links MP3 Diretos e Estáveis (CDN Pixabay)
-  // Estilos selecionados para combinar com a vibe pedida (Snoop, Drake, Rock, Pop)
+  // Playlist com Links MP3 de Alta Estabilidade e Qualidade de Estúdio (Sem distorção)
   const playlist = [
     {
-      title: "West Coast Vibe (Snoop Style)",
-      url: "https://cdn.pixabay.com/audio/2022/05/27/audio_1808fbf07a.mp3", // Old School Hip Hop
+      title: "West Coast G-Funk (Snoop Vibe)",
+      url: "https://cdn.pixabay.com/audio/2022/05/27/audio_1808fbf07a.mp3", // Clean Hip Hop
     },
     {
-      title: "Trap Beat (Drake Style)",
-      url: "https://cdn.pixabay.com/audio/2022/03/15/audio_c8c8a73467.mp3", // Modern Trap
+      title: "Chill Trap (Drake Vibe)",
+      url: "https://cdn.pixabay.com/audio/2022/03/15/audio_c8c8a73467.mp3", // Smooth Trap
     },
     {
-      title: "Hard Flow (Eminem Vibe)",
-      url: "https://cdn.pixabay.com/audio/2023/09/06/audio_2e23205396.mp3", // Aggressive Phonk/Rap
+      title: "Hard Beat (Eminem Vibe)",
+      url: "https://cdn.pixabay.com/audio/2022/03/23/audio_0579294e3d.mp3", // Clean Hard Rap
     },
     {
-      title: "Punk Rock (Ramones Vibe)",
+      title: "Indie Rock (Midnight Oil Vibe)",
+      url: "https://cdn.pixabay.com/audio/2020/09/14/audio_a0a033282b.mp3", // Guitar Rock
+    },
+    {
+      title: "Punk Energy (Ramones Vibe)",
       url: "https://cdn.pixabay.com/audio/2022/01/18/audio_d0a13f69d2.mp3", // Fast Rock
     },
     {
-      title: "Alt Rock (Midnight Oil Vibe)",
-      url: "https://cdn.pixabay.com/audio/2020/09/14/audio_a0a033282b.mp3", // Indie Rock
+      title: "Acoustic Road (Ben Harper Vibe)",
+      url: "https://cdn.pixabay.com/audio/2022/08/02/audio_884fe92c21.mp3", // Clean Acoustic
     },
     {
-      title: "Acoustic Chill (Ben Harper Vibe)",
-      url: "https://cdn.pixabay.com/audio/2022/08/02/audio_884fe92c21.mp3", // Folk/Guitar
+      title: "Party Pop (Black Eyed Peas Vibe)",
+      url: "https://cdn.pixabay.com/audio/2023/04/17/audio_f5e6709772.mp3", // Dance Pop
     },
     {
-      title: "Pop Dance (Black Eyed Peas Vibe)",
-      url: "https://cdn.pixabay.com/audio/2023/04/17/audio_f5e6709772.mp3", // Upbeat Pop
+      title: "Urban Lounge",
+      url: "https://cdn.pixabay.com/audio/2022/11/22/audio_febc508520.mp3", // Lo-Fi Clean
     },
     {
-      title: "Shopping Lounge",
-      url: "https://cdn.pixabay.com/audio/2022/11/22/audio_febc508520.mp3", // Lo-Fi
-    },
-    {
-      title: "Deep House",
-      url: "https://cdn.pixabay.com/audio/2022/03/24/audio_24e2358824.mp3", // House
+      title: "Summer Vibes",
+      url: "https://cdn.pixabay.com/audio/2022/03/24/audio_24e2358824.mp3", // House Clean
     }
   ];
 
@@ -81,7 +80,7 @@ const MusicPlayer: React.FC = () => {
       clickTimeoutRef.current = setTimeout(() => {
         togglePlay();
         clickTimeoutRef.current = null;
-      }, 250);
+      }, 200); // Delay reduzido para resposta rápida
     }
   };
 
@@ -89,13 +88,13 @@ const MusicPlayer: React.FC = () => {
     if (audioRef.current) {
       if (isPlaying) {
         audioRef.current.pause();
-        setIsInfoVisible(false); // Esconde ao pausar
+        setIsInfoVisible(false); 
       } else {
         const playPromise = audioRef.current.play();
         if (playPromise !== undefined) {
             playPromise.catch(e => console.error("Erro ao tocar:", e));
         }
-        showInfoTemporarily(); // Mostra info ao tocar
+        showInfoTemporarily();
       }
       setIsPlaying(!isPlaying);
     }
@@ -104,24 +103,31 @@ const MusicPlayer: React.FC = () => {
   const handleNextTrack = () => {
     const nextIndex = (currentTrackIndex + 1) % playlist.length;
     setCurrentTrackIndex(nextIndex);
-    setIsPlaying(true); 
-    showInfoTemporarily(); // Mostra info ao trocar
+    // Nota: O useEffect abaixo lidará com o play automático
   };
 
+  // Efeito para trocar a fonte de áudio quando o índice muda
   useEffect(() => {
     if (audioRef.current) {
-        audioRef.current.pause();
+        // Salva o estado atual de reprodução se quisermos forçar o play
+        // Mas se o usuário clicou para pular, queremos que toque.
+        const shouldPlay = isPlaying; 
+        
         audioRef.current.src = playlist[currentTrackIndex].url;
         audioRef.current.load();
-        if (isPlaying) {
+        
+        if (shouldPlay) {
             const playPromise = audioRef.current.play();
             if (playPromise !== undefined) {
-                playPromise.catch(e => console.error("Erro na troca de faixa:", e));
+                playPromise
+                    .then(() => showInfoTemporarily())
+                    .catch(e => console.error("Erro na troca de faixa:", e));
             }
         }
     }
   }, [currentTrackIndex]);
 
+  // Volume inicial
   useEffect(() => {
       if(audioRef.current) {
           audioRef.current.volume = 0.5;
@@ -167,9 +173,9 @@ const MusicPlayer: React.FC = () => {
         onClick={handleClick}
         className={`
             w-12 h-12 rounded-full flex items-center justify-center 
-            shadow-[0_4px_14px_0_rgba(0,0,0,0.39)] transition-all duration-300 
+            shadow-[0_4px_14px_0_rgba(0,0,0,0.39)] transition-all duration-300 border-2 border-transparent
             ${isPlaying 
-                ? 'bg-brand-yellow scale-110 shadow-[0_0_15px_rgba(255,234,0,0.5)]' 
+                ? 'bg-brand-yellow scale-110 shadow-[0_0_15px_rgba(255,234,0,0.5)] border-white/20' 
                 : 'bg-gray-900 hover:bg-gray-800'
             }
         `}
