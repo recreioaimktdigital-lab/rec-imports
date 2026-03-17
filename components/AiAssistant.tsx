@@ -1,6 +1,6 @@
 
 import React, { useState, useRef, useEffect } from 'react';
-import { GoogleGenAI, Chat, FunctionDeclaration, Type } from "@google/genai";
+import { GoogleGenAI, Chat, FunctionDeclaration, Type, GenerateContentResponse } from "@google/genai";
 import { AiAssistantIcon, CloseIcon } from './Icons';
 import { Product, Filters } from '../data/products';
 
@@ -55,9 +55,10 @@ const AiAssistant: React.FC<AiAssistantProps> = ({ products, onNavigate }) => {
     const apiKey = process.env.API_KEY;
 
     if (apiKey) {
+        // Correct initialization of GoogleGenAI client
         const ai = new GoogleGenAI({ apiKey: apiKey });
         chat.current = ai.chats.create({
-        model: 'gemini-2.5-flash',
+        model: 'gemini-3-flash-preview',
         config: {
             systemInstruction: "Você é um assistente de compras amigável e experiente da Recreio Imports, uma loja de e-commerce especializada em roupas e calçados esportivos. Seja prestativo, conciso e incentive os usuários a explorar os produtos. Use a função `searchProducts` sempre que um usuário pedir para encontrar um produto. Responda em português brasileiro.",
             tools: [{ functionDeclarations: [searchProductsFunctionDeclaration] }],
@@ -98,21 +99,28 @@ const AiAssistant: React.FC<AiAssistantProps> = ({ products, onNavigate }) => {
     setIsLoading(true);
 
     try {
-      let response = await chat.current.sendMessage({ message: userMessageText });
+      // Typing response with GenerateContentResponse as per guidelines
+      let response: GenerateContentResponse = await chat.current.sendMessage({ message: userMessageText });
       const functionCalls = response.functionCalls;
 
       if (functionCalls && functionCalls.length > 0) {
         const fc = functionCalls[0];
         const foundProducts = performProductSearch(fc.args);
         
+        // Respond to the function call back to the model
         response = await chat.current.sendMessage({
-          functionResponses: {
-            id: fc.id,
-            name: fc.name,
-            response: { products: foundProducts.map(p => ({ name: p.name, brand: p.brand })) },
-          },
+          message: [
+            {
+              functionResponse: {
+                id: fc.id,
+                name: fc.name,
+                response: { products: foundProducts.map(p => ({ name: p.name, brand: p.brand })) },
+              },
+            },
+          ],
         });
         
+        // Correct access to the text property from response
         const aiMessage: Message = { 
             sender: 'ai', 
             text: response.text || "Desculpe, não consegui encontrar uma resposta.",
@@ -121,6 +129,7 @@ const AiAssistant: React.FC<AiAssistantProps> = ({ products, onNavigate }) => {
         setMessages(prev => [...prev, aiMessage]);
 
       } else {
+        // Correct access to the text property from response
         const aiMessage: Message = { sender: 'ai', text: response.text || "Desculpe, não entendi." };
         setMessages(prev => [...prev, aiMessage]);
       }

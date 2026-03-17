@@ -1,6 +1,5 @@
 
 import React from 'react';
-// FIX: Corrected import path for Product and Filters types.
 import { Product, Filters } from '../data/products';
 
 interface FeaturedCategoriesProps {
@@ -8,35 +7,46 @@ interface FeaturedCategoriesProps {
 }
 
 const categories = [
-  { name: 'Basquete', image: 'https://images.pexels.com/photos/163452/basketball-dunk-blue-game-163452.jpeg?auto=compress&cs=tinysrgb&w=800' },
+  { name: 'Kids', image: 'https://images.pexels.com/photos/1619690/pexels-photo-1619690.jpeg?auto=compress&cs=tinysrgb&w=800' },
   { name: 'Corrida', image: 'https://images.pexels.com/photos/3763879/pexels-photo-3763879.jpeg?auto=compress&cs=tinysrgb&w=800' },
-  { name: 'NikeSKIMS', image: 'https://images.pexels.com/photos/1191531/pexels-photo-1191531.jpeg?auto=compress&cs=tinysrgb&w=800' },
+  { name: 'Lifestyle', image: 'https://images.pexels.com/photos/1191531/pexels-photo-1191531.jpeg?auto=compress&cs=tinysrgb&w=800' },
 ];
 
 const FeaturedCategories: React.FC<FeaturedCategoriesProps> = ({ onNavigate }) => {
   const handleShopCategory = (categoryName: string) => {
-    if (categoryName === 'Basquete' || categoryName === 'Corrida') {
-      onNavigate('shop', undefined, { style: [categoryName] });
-    } else if (categoryName === 'NikeSKIMS') {
-      // Categoria fictícia, filtra pela marca Nike como exemplo
-      onNavigate('shop', undefined, { brand: ['Nike'] });
+    if (categoryName === 'Kids') {
+      onNavigate('shop', undefined, { gender: ['Kids'], category: 'Todos', style: [], onSale: false });
+    } else if (categoryName === 'Corrida') {
+      onNavigate('shop', undefined, { style: ['Corrida'], category: 'Todos', gender: [] });
+    } else if (categoryName === 'Lifestyle') {
+      onNavigate('shop', undefined, { category: 'Life Style', style: [], gender: [] });
     } else {
       onNavigate('shop');
     }
   };
 
   return (
-    <section className="pb-12 md:pb-20 bg-gray-300 dark:bg-[#181818]">
-      <div className="container mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8">
+    <section className="pb-16 md:pb-24 bg-gray-300 dark:bg-[#181818]">
+      <div className="container mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
         {categories.map((category) => (
-          <div key={category.name} className="relative group overflow-hidden rounded-lg">
-            <img src={category.image} alt={category.name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" onContextMenu={(e) => e.preventDefault()} />
-            <div className="absolute inset-0 bg-black bg-opacity-20 flex items-end p-8">
+          <div 
+            key={category.name} 
+            className="relative group overflow-hidden rounded-xl aspect-[3/4] cursor-pointer" 
+            onClick={() => handleShopCategory(category.name)}
+          >
+            <img 
+              src={category.image} 
+              alt={category.name} 
+              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
+              onContextMenu={(e) => e.preventDefault()} 
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex flex-col justify-end p-8">
+              <h4 className="text-white text-2xl font-bold uppercase mb-4 tracking-tighter group-hover:text-brand-yellow transition-colors">{category.name}</h4>
               <button 
-                onClick={() => handleShopCategory(category.name)}
-                className="bg-white text-black font-semibold py-2 px-6 rounded-full hover:bg-brand-yellow transition-colors duration-300"
+                className="w-full bg-white text-black font-bold py-3 rounded-full hover:bg-brand-yellow transition-all duration-300 hover:scale-105"
+                onClick={(e) => { e.stopPropagation(); handleShopCategory(category.name); }}
               >
-                Comprar {category.name}
+                Explorar {category.name}
               </button>
             </div>
           </div>

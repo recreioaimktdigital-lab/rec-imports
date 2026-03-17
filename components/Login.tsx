@@ -12,7 +12,7 @@ const Login: React.FC = () => {
             <div className="relative z-10 max-w-md w-full space-y-8 bg-white/10 dark:bg-black/20 backdrop-blur-lg p-10 rounded-xl shadow-2xl text-white">
                 <div>
                     <h2 className="text-center text-4xl font-display uppercase text-brand-yellow">
-                        Entrar na sua Conta
+                        Entre na sua Conta
                     </h2>
                     <p className="mt-2 text-center text-md text-gray-300">
                         Acesse sua conta para ver seus pedidos e favoritos.

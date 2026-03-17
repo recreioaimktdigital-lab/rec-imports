@@ -68,17 +68,16 @@ const FeaturedProducts: React.FC<FeaturedProductsProps> = ({ products, onNavigat
                 {/* Gradient Overlay */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent flex flex-col justify-end p-8 text-white">
                   
-                  {/* Title and Rating Row - Strict Flex Alignment - Top Right */}
                   <div className="flex justify-between items-start w-full mb-2 gap-2">
                       <div className="flex-1 min-w-0 pr-2">
-                          <h3 className="text-3xl font-bold uppercase leading-tight text-left line-clamp-2">{product.name}</h3>
+                          <h3 className="text-lg font-bold uppercase leading-tight text-left line-clamp-2 group-hover:text-brand-yellow transition-colors">{product.name}</h3>
                       </div>
                       <div className="flex-shrink-0 pt-1 flex flex-col items-end">
                           <StarRatingDisplay rating={product.rating} reviewCount={product.reviews.length} />
                       </div>
                   </div>
                   
-                  <p className="text-lg text-gray-200 mt-1 mb-6 line-clamp-2 w-full font-medium drop-shadow-md text-left">{product.desc}</p>
+                  <p className="text-base text-gray-200 mt-1 mb-6 line-clamp-2 w-full font-medium drop-shadow-md text-left">{product.brand}</p>
                   
                   <div className="flex items-center justify-between">
                       <span className="text-2xl font-bold text-brand-yellow">R$ {product.price.toFixed(2)}</span>

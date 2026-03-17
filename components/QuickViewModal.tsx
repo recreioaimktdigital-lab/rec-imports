@@ -70,7 +70,7 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({ product, onClose, onAdd
         </div>
         <div className="w-full md:w-1/2 p-6 flex flex-col overflow-y-auto">
           <div className="flex justify-between items-start">
-            <h2 className="text-3xl font-display uppercase">{product.name}</h2>
+            <h2 className="text-xl font-display uppercase">{product.name}</h2>
             <button onClick={onClose} className="p-2 -mr-2 text-gray-500 hover:text-black dark:hover:text-white flex-shrink-0">
               <CloseIcon className="w-6 h-6" />
             </button>

@@ -1,4 +1,3 @@
-
 import React, { useRef, useState } from 'react';
 import { PlayCircleIcon, PauseIcon } from './Icons';
 
@@ -6,8 +5,6 @@ interface VideoActionProps {
   onOpenVideo: (url: string) => void;
 }
 
-// FIX: URLs substituídas por vídeos de amostra do Google que POSSUEM ÁUDIO garantido.
-// Os vídeos anteriores do Pexels eram mudos (stock footage).
 const videoLinks = {
   main: 'https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4',
   training: 'https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
@@ -46,7 +43,6 @@ const VideoAction: React.FC<VideoActionProps> = ({ onOpenVideo }) => {
         >
           Assista à Ação
         </h2>
-        {/* Increased font size */}
         <p className="mt-2 md:mt-4 text-xl md:text-2xl text-gray-900 max-w-4xl mx-auto">
           Sinta a intensidade, paixão e dedicação de atletas superando seus limites.
         </p>
@@ -69,26 +65,24 @@ const VideoAction: React.FC<VideoActionProps> = ({ onOpenVideo }) => {
             <div className="absolute inset-0 bg-black bg-opacity-30 group-hover:bg-opacity-20 transition-all duration-500"></div>
 
             <div className="absolute inset-0 flex flex-col items-center justify-center p-8 text-white transition-opacity duration-300 opacity-0 group-hover:opacity-100 pointer-events-none">
-               {/* Center Play Icon for Full Screen Action */}
                <PlayCircleIcon className="w-20 h-20 text-white group-hover:text-brand-yellow transition-all duration-300 transform group-hover:scale-125 drop-shadow-lg" />
             </div>
 
              <div className="absolute bottom-8 left-8 text-left text-white pointer-events-none">
                   <h3 className="text-3xl font-bold group-hover:text-brand-yellow transition-colors">Excelência Atlética</h3>
-                  {/* Increased font size */}
                   <p className="text-xl mt-2 drop-shadow-md">Veja como os campeões treinam e competem no mais alto nível.</p>
               </div>
 
-              {/* Pause/Play Toggle Button */}
+              {/* Padronizado: w-12 h-12 / Icon: w-6 h-6 */}
               <button 
                 onClick={toggleMainVideo}
-                className="absolute bottom-8 right-8 z-30 p-3 bg-black/50 rounded-full text-white hover:text-brand-yellow hover:bg-black/70 transition-all backdrop-blur-md border border-white/20"
+                className="absolute bottom-8 right-8 z-30 w-12 h-12 flex items-center justify-center bg-black/50 rounded-full text-white hover:text-brand-yellow hover:bg-black/70 transition-all backdrop-blur-md border border-white/20 shadow-xl"
                 aria-label={isMainVideoPlaying ? "Pausar vídeo" : "Tocar vídeo"}
               >
                   {isMainVideoPlaying ? (
-                      <PauseIcon className="w-8 h-8" />
+                      <PauseIcon className="w-6 h-6" />
                   ) : (
-                      <PlayCircleIcon className="w-8 h-8" />
+                      <PlayCircleIcon className="w-6 h-6" />
                   )}
               </button>
         </div>
@@ -102,9 +96,7 @@ const VideoAction: React.FC<VideoActionProps> = ({ onOpenVideo }) => {
             >
                 <img src={item.img} alt={item.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" onContextMenu={(e) => e.preventDefault()} />
                 <div className="absolute inset-0 bg-black bg-opacity-40 flex flex-col items-center justify-center p-4 text-white">
-                  {/* Updated: White by default, Brand Yellow on hover with scale animation */}
                   <PlayCircleIcon className="w-16 h-16 text-white group-hover:text-brand-yellow transition-all duration-300 transform group-hover:scale-125 drop-shadow-lg" />
-                  {/* Increased font size */}
                   <p className="mt-2 text-xl font-bold text-gray-900 group-hover:text-brand-yellow transition-colors duration-300 drop-shadow-md bg-white/10 backdrop-blur-sm px-2 rounded">{item.title}</p>
                 </div>
             </div>

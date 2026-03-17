@@ -1,7 +1,6 @@
 
 import React, { useRef } from 'react';
 import { ArrowLeftIcon, ArrowRightIcon } from './Icons';
-// FIX: Corrected import path for Product and Filters types.
 import { Product, Filters } from '../data/products';
 
 interface SpotlightProps {
@@ -9,34 +8,27 @@ interface SpotlightProps {
 }
 
 const spotlightItems = [
-  // Gênero
   { name: 'Moda Masculina', image: 'https://images.pexels.com/photos/1043474/pexels-photo-1043474.jpeg?auto=compress&cs=tinysrgb&w=800', filter: { gender: ['Masculino'] } },
   { name: 'Moda Feminina', image: 'https://images.pexels.com/photos/1124465/pexels-photo-1124465.jpeg?auto=compress&cs=tinysrgb&w=800', filter: { gender: ['Feminino'] } },
   { name: 'Para Crianças', image: 'https://images.pexels.com/photos/1619690/pexels-photo-1619690.jpeg?auto=compress&cs=tinysrgb&w=800', filter: { gender: ['Kids'] } },
-  
-  // Marcas
   { name: 'Nike Exclusivo', image: 'https://images.pexels.com/photos/2529148/pexels-photo-2529148.jpeg?auto=compress&cs=tinysrgb&w=800', filter: { brand: ['Nike'] } },
   { name: 'Adidas Originals', image: 'https://images.pexels.com/photos/2385477/pexels-photo-2385477.jpeg?auto=compress&cs=tinysrgb&w=800', filter: { brand: ['Adidas'] } },
+  { name: 'Converse Classics', image: 'https://images.pexels.com/photos/19090/pexels-photo.jpg?auto=compress&cs=tinysrgb&w=800', filter: { brand: ['Converse'] } },
   { name: 'Puma Performance', image: 'https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?auto=format&fit=crop&w=800&q=80', filter: { brand: ['Puma'] } },
   { name: 'Destaques New Balance', image: 'https://images.pexels.com/photos/12628400/pexels-photo-12628400.jpeg?auto=compress&cs=tinysrgb&w=800', filter: { brand: ['New Balance'] } },
   { name: 'Confira Asics', image: 'https://images.pexels.com/photos/267202/pexels-photo-267202.jpeg?auto=compress&cs=tinysrgb&w=800', filter: { brand: ['Asics'] } },
-  
-  // Estilos
   { name: 'Equipamentos de Corrida', image: 'https://images.pexels.com/photos/1571939/pexels-photo-1571939.jpeg?auto=compress&cs=tinysrgb&w=800', filter: { style: ['Corrida'] } },
   { name: 'Estilo Casual', image: 'https://images.pexels.com/photos/786003/pexels-photo-786003.jpeg?auto=compress&cs=tinysrgb&w=800', filter: { style: ['Casual'] } },
   { name: 'Visual Urbano', image: 'https://images.pexels.com/photos/1478442/pexels-photo-1478442.jpeg?auto=compress&cs=tinysrgb&w=800', filter: { style: ['Urbano'] } },
   { name: 'Tudo para Basquete', image: 'https://images.pexels.com/photos/866023/pexels-photo-866023.jpeg?auto=compress&cs=tinysrgb&w=800', filter: { style: ['Basquete'] } },
   { name: 'Foco na Academia', image: 'https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=800', filter: { style: ['Academia'] } },
   { name: 'Alta Performance', image: 'https://images.pexels.com/photos/3764014/pexels-photo-3764014.jpeg?auto=compress&cs=tinysrgb&w=800', filter: { style: ['Performance'] } },
-
-  // Categorias
   { name: 'Tênis em Destaque', image: 'https://images.pexels.com/photos/1598505/pexels-photo-1598505.jpeg?auto=compress&cs=tinysrgb&w=800', filter: { category: 'Tênis' } },
-  { name: 'Camisetas & Tops', image: 'https://images.pexels.com/photos/4167544/pexels-photo-4167544.jpeg?auto=compress&cs=tinysrgb&w=800', filter: { category: 'Roupas' } },
-  { name: 'Acessórios Essenciais', image: 'https://images.pexels.com/photos/322207/pexels-photo-322207.jpeg?auto=compress&cs=tinysrgb&w=800', filter: { category: 'Artigos Esportivos' } },
-  { name: 'Jaquetas e Moletons', image: 'https://images.pexels.com/photos/1183266/pexels-photo-1183266.jpeg?auto=compress&cs=tinysrgb&w=800', filter: { category: 'Life Style' } },
-  { name: 'Suplementos', image: 'https://images.pexels.com/photos/4165239/pexels-photo-4165239.jpeg?auto=compress&cs=tinysrgb&w=800', filter: { category: 'Suplementos' } },
-  { name: 'Fisio e Ortopédico', image: 'https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=800', filter: { category: 'Fisio e Ortopédico' } },
+  { name: 'Life Style', image: 'https://images.pexels.com/photos/1183266/pexels-photo-1183266.jpeg?auto=compress&cs=tinysrgb&w=800', filter: { category: 'Life Style' } },
   { name: 'Moda Praia', image: 'https://images.pexels.com/photos/1485637/pexels-photo-1485637.jpeg?auto=compress&cs=tinysrgb&w=800', filter: { category: 'Moda Praia' } },
+  { name: 'Acessórios Essenciais', image: 'https://images.pexels.com/photos/322207/pexels-photo-322207.jpeg?auto=compress&cs=tinysrgb&w=800', filter: { category: 'Artigos Esportivos' } },
+  { name: 'Suplementos', image: 'https://images.pexels.com/photos/4165239/pexels-photo-4165239.jpeg?auto=compress&cs=tinysrgb&w=800', filter: { category: 'Suplementos' } },
+  { name: 'Fisio e Ortopédicos', image: 'https://images.pexels.com/photos/4045558/pexels-photo-4045558.jpeg?auto=compress&cs=tinysrgb&w=800', filter: { category: 'Fisio e Ortopédicos' } },
 ];
 
 const Spotlight: React.FC<SpotlightProps> = ({ onNavigate }) => {
@@ -61,7 +53,6 @@ const Spotlight: React.FC<SpotlightProps> = ({ onNavigate }) => {
         >
           Super Ofertas
         </h2>
-        {/* Increased font size */}
         <p className="mt-2 md:mt-4 text-xl md:text-2xl text-gray-700 dark:text-gray-300 max-w-4xl mx-auto">
           Aproveite nossos descontos incríveis em produtos selecionados. Corra, é por tempo limitado!
         </p>
@@ -80,7 +71,7 @@ const Spotlight: React.FC<SpotlightProps> = ({ onNavigate }) => {
                 <div className="relative overflow-hidden rounded-lg w-full h-60 md:h-80 bg-gray-100 dark:bg-gray-800">
                   <img src={item.image} alt={item.name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" onContextMenu={(e) => e.preventDefault()} />
                 </div>
-                <span className="mt-4 block text-lg font-bold text-black dark:text-white uppercase tracking-wide group-hover:text-brand-yellow transition-colors">{item.name}</span>
+                <span className="mt-4 block text-base font-bold text-black dark:text-white uppercase tracking-wide group-hover:text-brand-yellow transition-colors">{item.name}</span>
               </button>
             ))}
           </div>
