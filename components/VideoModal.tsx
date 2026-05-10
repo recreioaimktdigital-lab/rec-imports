@@ -18,11 +18,11 @@ const VideoModal: React.FC<VideoModalProps> = ({ videoUrl, onClose }) => {
   if (!videoUrl) return null;
 
   return (
-    <div
+    <div 
       className="fixed inset-0 bg-black/90 z-[100] flex items-center justify-center animate-fade-in"
       onClick={onClose}
     >
-      <div
+      <div 
         className="relative w-full max-w-5xl aspect-video mx-4"
         onClick={(e) => e.stopPropagation()}
       >
