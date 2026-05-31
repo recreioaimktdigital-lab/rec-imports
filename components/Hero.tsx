@@ -67,4 +67,4 @@ export default function Hero() {
       </div>
     </div>
   );
-}
+}Corrige vídeo do Hero para link funcional
