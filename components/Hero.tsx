@@ -32,9 +32,8 @@ export default function Hero() {
         muted 
         loop 
         playsInline
-        className="absolute inset-0 w-full h-full object-cover opacity-90"
-      >
-        <source src="https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4" type="video/mp4" />
+        className="absolute inset-0 w-full h-full object-cover opacity-90">
+      <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4" />
       </video>
       <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/30" />
       
